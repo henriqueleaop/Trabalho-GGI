@@ -16,6 +16,7 @@ from .academic import (
 )
 from .insights import WEEKDAY_ORDER
 from .paths import DEFAULT_PROCESSED_CSV, DEFAULT_PROCESSED_PARQUET
+from .reporting import build_pdf_report, build_report_context
 
 
 PALETTE = {
@@ -422,11 +423,11 @@ def render_context_box(title: str, happened: str, matters: str, action: str) -> 
     st.markdown(
         (
             "<div class='context-card'>"
-            "<div class='card-kicker'>Contexto</div>"
+            "<div class='card-kicker'>Leitura do bloco</div>"
             f"<div class='card-title'>{title}</div>"
-            f"<p class='card-body'><strong>O que aconteceu:</strong> {happened}</p>"
+            f"<p class='card-body'><strong>O que este bloco mostra:</strong> {happened}</p>"
             f"<p class='card-body'><strong>Por que isso importa:</strong> {matters}</p>"
-            f"<p class='card-body'><strong>O que fazer agora:</strong> {action}</p>"
+            f"<p class='card-body'><strong>Como isso apoia a decisao:</strong> {action}</p>"
             "</div>"
         ),
         unsafe_allow_html=True,
@@ -484,9 +485,9 @@ def build_sidebar(games_df: pd.DataFrame) -> tuple[pd.DataFrame, str]:
             "<div class='side-card'>"
             "<div class='card-kicker'>Apresentacao</div>"
             "<div class='card-title'>Visao do trabalho</div>"
-            "<p class='card-body'>Fase 1 mostra os dados brutos da SteamLoja. "
-            "Fase 2 transforma esses dados em 10 informacoes estrategicas. "
-            "Fase 3 converte os achados em plano de acao.</p>"
+            "<p class='card-body'>Na Fase 1, o painel organiza os dados brutos da SteamLoja. "
+            "Na Fase 2, esses dados se transformam em informacoes gerenciais. "
+            "Na Fase 3, os resultados sustentam um plano de acao com prioridades, riscos e horizonte de execucao.</p>"
             "</div>"
         ),
         unsafe_allow_html=True,
@@ -497,8 +498,8 @@ def build_sidebar(games_df: pd.DataFrame) -> tuple[pd.DataFrame, str]:
             "<div class='card-kicker'>Base do estudo</div>"
             "<div class='card-title'>Recorte da analise</div>"
             "<p class='card-body'>Empresa ficticia: SteamLoja. "
-            "Mes base: marco de 2026. "
-            "Bases: operacao da loja + evidencias reais do mercado Steam.</p>"
+            "Periodo-base: marco de 2026. "
+            "A leitura combina dados operacionais simulados da loja com sinais reais do mercado Steam.</p>"
             "</div>"
         ),
         unsafe_allow_html=True,
@@ -539,10 +540,10 @@ def render_header(sales_df: pd.DataFrame, games_df: pd.DataFrame, source_mode: s
     period = f"{sales_df['date'].min().strftime('%d/%m/%Y')} a {sales_df['date'].max().strftime('%d/%m/%Y')}"
     chips = [
         "SteamLoja",
-        "Dado bruto -> insight -> acao",
+        "Dados -> analise -> plano",
         f"Periodo base: {period}",
         f"Fonte ativa: {source_mode}",
-        f"Mercado Steam analisado: {len(games_df):,} jogos",
+        f"Base de mercado: {len(games_df):,} jogos",
     ]
     chips_html = "".join(
         f"<span class='chip' style='background:rgba(255,255,255,0.10);color:{PALETTE['text_inverse']};border-color:rgba(255,255,255,0.16);'>{item}</span>"
@@ -554,8 +555,8 @@ def render_header(sales_df: pd.DataFrame, games_df: pd.DataFrame, source_mode: s
             <div style="color:#ffd9c6; text-transform:uppercase; letter-spacing:0.08em; font-size:0.82rem; font-weight:700;">Trabalho de Gestao e Governanca da Informacao</div>
             <h1 style="font-family:{DISPLAY_FONT}; font-size:2.35rem; margin:0.05rem 0 0.3rem 0;">SteamLoja Academica</h1>
             <p style="font-size:1rem; max-width:860px; line-height:1.58; opacity:0.96;">
-                Este painel foi montado para mostrar como dados operacionais de uma empresa ficticia inspirada na Steam
-                evoluem para informacoes gerenciais e sustentam um planejamento estrategico pouco refutavel.
+                Este painel demonstra como dados operacionais de uma loja ficticia inspirada no ecossistema Steam
+                podem ser organizados, interpretados e convertidos em decisoes gerenciais e estrategicas de forma clara e defensavel.
             </p>
             <div>{chips_html}</div>
         </div>
@@ -570,13 +571,13 @@ def render_phase_one(store_sources: dict[str, pd.DataFrame], source_mode: str) -
     access_df = store_sources["store_access"]
 
     render_signal_card(
-        "Fase 1: aqui ainda nao ha decisao",
-        "Nesta etapa a SteamLoja apenas observa o funcionamento da operacao. O objetivo e montar um quadro simples de dados brutos para depois transformar isso em leitura gerencial.",
+        "Fase 1: leitura operacional da SteamLoja",
+        "Nesta etapa, a proposta e apresentar a operacao sem interpretacao estrategica. O foco esta em organizar as fontes e identificar padroes basicos de vendas, interesse do publico e fluxo de acesso.",
     )
     if source_mode == "Mercado Steam":
         render_surface_card(
             "Leitura de apoio",
-            "Mesmo com a fonte ativa em Mercado Steam, esta fase continua mostrando a operacao da SteamLoja porque ela e a base do trabalho academico.",
+            "Mesmo quando a camada de mercado esta ativa, a Fase 1 permanece centrada na operacao da SteamLoja, porque ela constitui a base do estudo academico.",
         )
 
     render_metric_cards(
@@ -593,9 +594,9 @@ def render_phase_one(store_sources: dict[str, pd.DataFrame], source_mode: str) -
     with left:
         render_context_box(
             "Fonte 1: vendas diarias do mes",
-            "Mostra o volume de jogos vendidos por dia ao longo do mes base.",
-            "Serve para identificar picos, vales e comportamento semanal da operacao.",
-            "Usar essa leitura como base para entender quando a loja vende melhor e quando precisa de reativacao.",
+            "Apresenta a quantidade de jogos vendidos em cada dia do mes-base.",
+            "Permite identificar picos de demanda, quedas recorrentes e diferencas de desempenho entre os dias da semana.",
+            "Serve de base para definir calendario promocional, reforco de vitrine e acoes de reativacao.",
         )
         st.dataframe(store_sources["sales_calendar"], width="stretch")
     with right:
@@ -633,9 +634,9 @@ def render_phase_one(store_sources: dict[str, pd.DataFrame], source_mode: str) -
     with right:
         render_context_box(
             "Fonte 2: perfil de clientes por genero",
-            "Mostra quais generos concentram mais interesse ao longo da semana.",
-            "Ajuda a entender o perfil do publico e a ajustar vitrine, bundles e comunicacao.",
-            "Usar os generos lideres como eixo principal da curadoria comercial.",
+            "Mostra quais generos concentram maior interesse do publico ao longo da semana.",
+            "Ajuda a entender o perfil da demanda e a ajustar curadoria, comunicacao e composicao de bundles.",
+            "Orienta quais categorias merecem mais destaque comercial e editorial.",
         )
         weekly_profile = customer_df.pivot(index="weekday", columns="genre", values="customer_share_pct").reindex(WEEKDAY_ORDER)
         st.dataframe(weekly_profile, width="stretch")
@@ -645,9 +646,9 @@ def render_phase_one(store_sources: dict[str, pd.DataFrame], source_mode: str) -
     with left:
         render_context_box(
             "Fonte 3: acessos por turno",
-            "Mostra quantas visitas a loja recebe por turno ao longo da semana.",
-            "Essa leitura ajuda a decidir horario de destaque, comunicacao e campanhas.",
-            "Usar os horarios fortes para lancamentos e os horarios fracos para reativacao.",
+            "Apresenta o volume de visitas da loja por turno ao longo da semana.",
+            "Essa leitura ajuda a localizar os momentos de maior exposicao e os vales de menor tracao.",
+            "Apoia a definicao de horario para campanhas principais, atualizacao de vitrine e acoes de recuperacao.",
         )
         access_table = access_df.pivot(index="weekday", columns="shift", values="visits").reindex(index=WEEKDAY_ORDER, columns=SHIFT_ORDER)
         st.dataframe(access_table, width="stretch")
@@ -678,7 +679,7 @@ def render_insight_cards(insights: list[dict[str, str]]) -> None:
                 f"<div class='title'>{insight['title']}</div>"
                 f"<div class='value'>{insight['value']}</div>"
                 f"<p class='card-body'><strong>Por que isso importa:</strong> {insight['why']}</p>"
-                f"<p class='card-body'><strong>O que fazer agora:</strong> {insight['action']}</p>"
+                f"<p class='card-body'><strong>Implicacao gerencial:</strong> {insight['action']}</p>"
                 "</div>"
             ),
             unsafe_allow_html=True,
@@ -695,9 +696,9 @@ def render_market_anchor_cards(anchors: dict[str, object]) -> None:
     )
     render_context_box(
         "Ancoras de mercado Steam",
-        "Esses tres sinais ligam a operacao da SteamLoja ao mercado real da Steam.",
-        "Eles ajudam a defender que o plano nao foi inventado no vacuo: ele conversa com preco, free-to-play e SteamOS/Linux.",
-        "Usar essas ancoras para justificar o planejamento estrategico na defesa do trabalho.",
+        "Esses tres sinais conectam a operacao da SteamLoja ao comportamento real do ecossistema Steam.",
+        "Eles reforcam que o planejamento considera preco, modelo free-to-play e aderencia a Linux e SteamOS.",
+        "Fortalecem a argumentacao do trabalho ao aproximar a proposta academica de movimentos concretos do mercado.",
     )
 
 
@@ -707,10 +708,10 @@ def render_phase_two(store_sources: dict[str, pd.DataFrame], filtered_games: pd.
     strategy = build_strategy_payload(insights, anchors, store_sources["sales"], store_sources["customer_profile"], store_sources["store_access"])
 
     render_signal_card(
-        "Fase 2: transformar observacao em leitura gerencial",
-        "Agora a SteamLoja deixa de apenas mostrar o que aconteceu e passa a responder o que importa, por que importa e qual decisao fica mais defensavel a partir disso.",
+        "Fase 2: transformacao dos dados em informacao gerencial",
+        "Nesta fase, a analise deixa de apenas descrever a operacao e passa a destacar relacoes, prioridades e oportunidades de decisao que podem ser defendidas com clareza.",
     )
-    grouped_labels = ["10 informacoes estrategicas", "Vendas + Clientes + Acessos", f"Fonte ativa: {source_mode}"]
+    grouped_labels = ["10 informacoes gerenciais", "Vendas, clientes e acessos", f"Fonte ativa: {source_mode}"]
     render_chips(grouped_labels)
     render_insight_cards(insights)
 
@@ -792,7 +793,7 @@ def render_timeline_column(title: str, items: list[dict[str, str]]) -> None:
 def render_phase_three(store_sources: dict[str, pd.DataFrame], strategy: dict[str, object], source_mode: str) -> None:
     render_signal_card(
         "Fase 3: planejamento estrategico",
-        "Nesta fase a SteamLoja transforma os sinais da operacao em um plano defendivel, com horizonte de 3 meses, 6 meses e 1 ano, alem de riscos, prioridades e conexao com o mercado.",
+        "Nesta fase, os sinais da operacao e do mercado sao convertidos em um plano de acao com horizonte de 3 meses, 6 meses e 1 ano, incluindo prioridades, riscos e conexao com o setor.",
     )
     render_surface_card("Resumo executivo", str(strategy["summary"]))
     render_chips([f"Fonte ativa: {source_mode}", "Planejamento academico", "Empresa ficticia alinhada ao mercado real"])
@@ -834,15 +835,32 @@ def render_phase_three(store_sources: dict[str, pd.DataFrame], strategy: dict[st
                 "<div class='surface-card'>"
                 "<div class='card-kicker'>Acao principal</div>"
                 f"<div class='card-title'>{action['title']}</div>"
-                f"<p class='card-body'>{action['do']}</p>"
-                f"<p class='card-body'>{action['because']}</p>"
-                f"<p class='card-body'>{action['impact']}</p>"
+                f"<p class='card-body'><strong>Proposta:</strong> {action['do']}</p>"
+                f"<p class='card-body'><strong>Justificativa:</strong> {action['because']}</p>"
+                f"<p class='card-body'><strong>Resultado esperado:</strong> {action['impact']}</p>"
                 "</div>"
             ),
             unsafe_allow_html=True,
         )
 
     render_surface_card("Conexao com o mercado", str(strategy["market_connection"]))
+
+
+def render_export_controls(games_df: pd.DataFrame) -> None:
+    context = build_report_context(games_df)
+    try:
+        pdf_bytes = build_pdf_report(context)
+    except RuntimeError as exc:
+        render_signal_card("Exportacao em PDF indisponivel", str(exc))
+        return
+
+    st.download_button(
+        "Baixar relatorio em PDF",
+        data=pdf_bytes,
+        file_name="steamloja_academica.pdf",
+        mime="application/pdf",
+        width="stretch",
+    )
 
 
 def run_app() -> None:
@@ -882,4 +900,5 @@ def run_app() -> None:
             store_sources["customer_profile"],
             store_sources["store_access"],
         )
+        render_export_controls(filtered_games)
         render_phase_three(store_sources, strategy, source_mode)

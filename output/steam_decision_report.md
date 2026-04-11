@@ -51,16 +51,16 @@ Domingo    430    770    980
 
 ### 10 informacoes estrategicas
 
-1. **Dia com maior media de vendas**: Sexta (93.0 jogos) - Sexta concentra o melhor desempenho medio de vendas no mes analisado. Acao sugerida: Reforcar campanhas de destaque e bundles em Sexta.
-2. **Relacao entre o melhor e o pior dia**: 3.91x - Sexta vende muito mais do que Domingo, mostrando uma operacao com picos claros. Acao sugerida: Usar Domingo para campanhas de reativacao e cupons de entrada.
-3. **Peso de sexta e sabado nas vendas do mes**: 44.0% - O fim da semana concentra grande parte da demanda da SteamLoja. Acao sugerida: Concentrar investimento promocional e destaque de vitrine nessa janela.
-4. **Total vendido e media diaria**: 1,513 jogos | media 48.81 - Esse numero define a escala real da operacao analisada e serve de base para metas. Acao sugerida: Usar a media diaria como linha de base para avaliar campanhas futuras.
-5. **Genero com maior interesse do publico**: Action (44.0%) - Esse genero aparece como preferencia dominante no perfil semanal de clientes. Acao sugerida: Destacar mais ofertas e comunicacao para jogos de Action.
-6. **Participacao conjunta dos generos mais fortes**: 87.0% - Os tres generos lideres concentram quase todo o interesse comercial da semana. Acao sugerida: Priorizar catalogo, bundles e anuncios alinhados aos generos lideres.
-7. **Turno com maior volume de acessos**: Noite (1447 acessos) - O horario noturno concentra mais visitas e tende a trazer mais conversao potencial. Acao sugerida: Agendar comunicacao principal e atualizacao de destaque para a noite.
-8. **Dia e turno de maior trafego**: Sabado / Noite - Essa e a janela de maior exposicao da SteamLoja na semana analisada. Acao sugerida: Usar esse pico para lancamentos, bundles premium e vitrine principal.
-9. **Janela de baixa demanda para reativacao**: Domingo / Manha - Esse e o ponto mais fraco de acesso e precisa de acao para reduzir o vale da semana. Acao sugerida: Testar cupom, midweek deal ou bundle de entrada nesse horario.
-10. **Melhor combinacao comercial do recorte**: Sexta + Action + Noite - A combinacao junta o melhor dia de venda, o genero de maior interesse e o turno de maior trafego. Acao sugerida: Montar a campanha principal da SteamLoja em Sexta a noite, com foco em Action.
+1. **Dia com maior media de vendas**: Sexta (93.0 jogos) - Sexta apresenta o melhor desempenho medio de vendas no mes analisado. Acao sugerida: Recomenda-se concentrar campanhas de destaque e bundles em Sexta.
+2. **Relacao entre o melhor e o pior dia**: 3.91x - Sexta vende significativamente mais do que Domingo, evidenciando uma operacao com picos bem definidos. Acao sugerida: Domingo deve ser tratado como janela prioritaria para acoes de reativacao e ofertas de entrada.
+3. **Peso de sexta e sabado nas vendas do mes**: 44.0% - O fim da semana concentra uma parcela relevante da demanda da SteamLoja. Acao sugerida: A vitrine principal e o investimento promocional devem ser mais fortes nessa janela.
+4. **Total vendido e media diaria**: 1,513 jogos | media 48.81 - Esse numero define a escala da operacao analisada e serve de referencia para metas e comparacoes futuras. Acao sugerida: A media diaria deve ser adotada como linha de base para avaliar o desempenho das proximas campanhas.
+5. **Genero com maior interesse do publico**: Action (44.0%) - Esse genero aparece como preferencia dominante no perfil semanal de clientes. Acao sugerida: A comunicacao e a curadoria comercial devem dar maior destaque aos jogos de Action.
+6. **Participacao conjunta dos generos mais fortes**: 87.0% - Os tres generos lideres concentram a maior parte do interesse comercial observado na semana. Acao sugerida: Catalogo, bundles e anuncios devem priorizar os generos com maior tracao.
+7. **Turno com maior volume de acessos**: Noite (1447 acessos) - O horario noturno concentra mais visitas e tende a reunir maior potencial de conversao. Acao sugerida: As principais atualizacoes de vitrine e comunicacao devem ser programadas para a noite.
+8. **Dia e turno de maior trafego**: Sabado / Noite - Essa e a janela de maior exposicao da SteamLoja na semana analisada. Acao sugerida: Esse pico deve receber lancamentos, bundles premium e o principal destaque de vitrine.
+9. **Janela de baixa demanda para reativacao**: Domingo / Manha - Esse e o ponto mais fraco de acesso da semana e exige intervencao para reduzir o vale operacional. Acao sugerida: Vale testar cupom, oferta leve ou bundle de entrada nesse horario.
+10. **Melhor combinacao comercial do recorte**: Sexta + Action + Noite - A combinacao reune o melhor dia de venda, o genero de maior interesse e o turno de maior trafego. Acao sugerida: A campanha principal da SteamLoja deve ser organizada em Sexta, no turno da noite, com foco em Action.
 
 ### Ancoras de mercado Steam
 
@@ -81,28 +81,28 @@ Domingo    430    770    980
 
 ### Indicador composto de oportunidade
 
-Indicador composto = owners + aprovacao + engajamento + acessibilidade de preco. Ele ajuda a priorizar leitura comercial, mas nao substitui validacao manual.
+Indicador composto: combina base estimada de owners, aprovacao do publico, engajamento e acessibilidade de preco. Ele orienta a leitura comercial do catalogo, mas nao substitui avaliacao qualitativa.
 
 ## Fase 3: Planejamento Estrategico
 
 ### Resumo executivo
 
-A SteamLoja tem pico comercial em Sexta, prefere o genero Action e recebe mais visitas no turno da noite. O plano prioriza ocupar o vale de Domingo / Manha sem perder o folego da janela forte. No mercado Steam, a distancia de preco entre AAA e Indie e de $37.50, com 16.8% de jogos gratis no topo e 18.3% de suporte Linux entre os titulos mais populares.
+A SteamLoja apresenta seu melhor desempenho comercial em Sexta, maior interesse do publico em Action e pico de visitas no turno da noite. O plano proposto busca reduzir o vale de Domingo / Manha sem comprometer a janela mais forte de conversao. Como referencia externa, o mercado Steam mostra diferenca de $37.50 entre AAA e Indie, com 16.8% de jogos gratuitos entre os titulos mais populares e 18.3% de suporte Linux nesse grupo.
 
 ### Cronograma de 3 meses
-- Fazer isso: Reforcar a vitrine principal em Sexta com foco na combinacao Sexta + Action + Noite. Por causa disso: Esse e o ponto mais forte de demanda e concentracao de interesse. Impacto esperado: Aumenta conversao sem elevar complexidade operacional.
-- Fazer isso: Criar uma campanha de reativacao para Domingo / Manha. Por causa disso: Esse e o vale mais claro da semana em acessos e precisa ser corrigido. Impacto esperado: Reduz ociosidade e melhora a distribuicao das vendas ao longo da semana.
-- Fazer isso: Organizar bundles simples por genero lider e ticket de entrada. Por causa disso: O publico ja mostrou preferencia forte por poucos generos centrais. Impacto esperado: Acelera decisao de compra e facilita a comunicacao da loja.
+- Fazer isso: Reforcar a vitrine principal em Sexta, com foco na combinacao Sexta + Action + Noite. Por causa disso: Essa e a janela de maior demanda e concentracao de interesse do recorte analisado. Impacto esperado: A medida tende a elevar a conversao sem aumentar significativamente a complexidade operacional.
+- Fazer isso: Criar uma campanha de reativacao para Domingo / Manha. Por causa disso: Esse e o principal vale semanal de acesso e precisa ser tratado com prioridade. Impacto esperado: A acao reduz ociosidade e melhora a distribuicao das vendas ao longo da semana.
+- Fazer isso: Organizar bundles simples por genero lider e ticket de entrada. Por causa disso: O publico demonstrou preferencia clara por poucos generos centrais. Impacto esperado: Isso tende a acelerar a decisao de compra e simplificar a comunicacao da loja.
 
 ### Cronograma de 6 meses
-- Fazer isso: Criar rotina mensal de leitura de indicadores e ajuste de calendario promocional. Por causa disso: A operacao precisa transformar dado em decisao recorrente, nao em analise pontual. Impacto esperado: Melhora previsibilidade comercial e disciplina gerencial.
-- Fazer isso: Ampliar a curadoria de jogos alinhados a Linux e SteamOS. Por causa disso: A Valve segue investindo em plataforma aberta e compatibilidade, especialmente apos o Steam Deck. Impacto esperado: Posiciona a SteamLoja mais perto das tendencias reais do ecossistema Steam.
-- Fazer isso: Testar campanhas tematicas inspiradas em weekly deals e eventos sazonais. Por causa disso: A divulgacao da Steam se apoia em ritual promocional recorrente e facil de comunicar. Impacto esperado: Gera previsibilidade de audiencia e aumenta lembranca de marca.
+- Fazer isso: Criar rotina mensal de leitura de indicadores e ajuste de calendario promocional. Por causa disso: A operacao precisa transformar dados em decisao recorrente, e nao em analise eventual. Impacto esperado: A iniciativa melhora previsibilidade comercial e disciplina gerencial.
+- Fazer isso: Ampliar a curadoria de jogos alinhados a Linux e SteamOS. Por causa disso: A Valve continua investindo em plataforma aberta e compatibilidade, especialmente apos o Steam Deck. Impacto esperado: Isso posiciona a SteamLoja mais perto das tendencias reais do ecossistema Steam.
+- Fazer isso: Testar campanhas tematicas inspiradas em weekly deals e eventos sazonais. Por causa disso: A divulgacao da Steam se apoia em rituais promocionais recorrentes e de facil comunicacao. Impacto esperado: A medida tende a gerar previsibilidade de audiencia e aumentar lembranca de marca.
 
 ### Cronograma de 1 ano
-- Fazer isso: Abrir uma frente comercial para hardware, gift cards e acessorios do ecossistema Steam. Por causa disso: A transicao de Steam Machine para Steam Deck mostra que a aderencia vem do ecossistema, nao de um produto isolado. Impacto esperado: Diversifica receita e fortalece a identidade da SteamLoja.
-- Fazer isso: Evoluir o painel para monitoramento continuo com mais fontes do mercado Steam. Por causa disso: O trabalho atual prova valor, mas a maturidade depende de acompanhamento regular. Impacto esperado: Permite planejamento anual com menos intuicao e mais evidencia.
-- Fazer isso: Construir experiencias proprias de divulgacao, como calendario de eventos e recomendacoes editoriais. Por causa disso: A Steam nao depende so de preco: depende de descoberta, comunidade e repertorio de vitrine. Impacto esperado: Melhora diferenciacao competitiva e fidelizacao.
+- Fazer isso: Abrir uma frente comercial para hardware, gift cards e acessorios do ecossistema Steam. Por causa disso: A transicao de Steam Machine para Steam Deck mostra que a aderencia vem do ecossistema, nao de um produto isolado. Impacto esperado: A estrategia diversifica receita e fortalece a identidade da SteamLoja.
+- Fazer isso: Evoluir o painel para monitoramento continuo com mais fontes do mercado Steam. Por causa disso: O trabalho atual demonstra valor, mas a maturidade depende de acompanhamento continuo. Impacto esperado: Isso permite planejamento anual com menos intuicao e mais evidencia.
+- Fazer isso: Construir experiencias proprias de divulgacao, como calendario de eventos e recomendacoes editoriais. Por causa disso: A Steam nao depende apenas de preco, mas tambem de descoberta, comunidade e repertorio de vitrine. Impacto esperado: A medida fortalece diferenciacao competitiva e fidelizacao.
 
 ### Demandas e tarefas
 - Aumentar vendas fora do pico de sexta e sabado.
@@ -126,12 +126,12 @@ A SteamLoja tem pico comercial em Sexta, prefere o genero Action e recebe mais v
 - Revisar trimestralmente o catalogo com base em aderencia ao ecossistema Steam.
 
 ### 3 acoes estrategicas principais
-- **Campanhas de reativacao na janela fraca**: Fazer isso: ativar bundles leves e cupons em Domingo / Manha. Por causa disso: esse e o ponto mais fraco da semana em acesso e potencial de venda. Impacto esperado: reduzir o vale operacional e gerar receita incremental.
-- **Vitrine principal no melhor combo comercial**: Fazer isso: concentrar a campanha principal em Sexta + Action + Noite. Por causa disso: essa combinacao une o melhor dia, o genero dominante e o turno de maior trafego. Impacto esperado: elevar conversao nas janelas de maior retorno.
-- **Curadoria alinhada ao ecossistema Valve**: Fazer isso: ampliar produtos e comunicacao ligados a Linux, SteamOS e Steam Deck. Por causa disso: a Valve migrou de tentativas isoladas para um ecossistema integrado e hoje colhe resultado com o Steam Deck. Impacto esperado: tornar a SteamLoja mais atual, coerente e dificil de refutar na defesa.
+- **Campanhas de reativacao na janela fraca**: Ativar bundles leves e cupons em Domingo / Manha. Esse e o ponto mais fraco da semana em acesso e potencial de venda. A tendencia e reduzir o vale operacional e gerar receita incremental.
+- **Vitrine principal no melhor combo comercial**: Concentrar a campanha principal em Sexta + Action + Noite. Essa combinacao une o melhor dia, o genero dominante e o turno de maior trafego. A expectativa e elevar a conversao nas janelas de maior retorno.
+- **Curadoria alinhada ao ecossistema Valve**: Ampliar produtos e comunicacao ligados a Linux, SteamOS e Steam Deck. A Valve migrou de tentativas isoladas para um ecossistema integrado e hoje colhe resultado com o Steam Deck. Isso torna a SteamLoja mais atual, coerente e mais solida para a defesa academica.
 
 ### Conexao com o mercado
-O plano posiciona a SteamLoja como uma empresa ficticia coerente com o mercado real. Ele aproveita a logica promocional da Steam, observa a forca do free-to-play, reconhece a distancia entre AAA e Indie e usa suporte Linux como sinal de proximidade com a estrategia de SteamOS e Steam Deck. O faturamento observado no mes base foi de R$161,205, o que reforca a necessidade de proteger os dias fortes e recuperar os dias fracos.
+O plano posiciona a SteamLoja como uma empresa ficticia coerente com o mercado real. Ele aproveita a logica promocional da Steam, observa a forca do free-to-play, reconhece a distancia entre AAA e Indie e usa suporte Linux como sinal de proximidade com a estrategia de SteamOS e Steam Deck. O faturamento observado no mes-base foi de R$161,205, o que reforca a necessidade de proteger os dias fortes e recuperar os dias fracos.
 
 ## Aderencia as decisoes reais da Steam/Valve
 

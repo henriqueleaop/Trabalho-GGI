@@ -8,6 +8,7 @@ from src.steam_dashboard.academic import (
     build_strategy_payload,
     load_academic_sources,
 )
+from src.steam_dashboard.reporting import build_pdf_report, build_report_context
 
 
 class AcademicTests(unittest.TestCase):
@@ -60,6 +61,33 @@ class AcademicTests(unittest.TestCase):
         self.assertEqual(len(strategy["one_year"]), 3)
         self.assertEqual(len(strategy["actions"]), 3)
         self.assertIn("SteamLoja", strategy["summary"])
+
+    def test_build_pdf_report(self):
+        try:
+            import reportlab  # noqa: F401
+        except ModuleNotFoundError:
+            self.skipTest("reportlab nao instalado")
+
+        games_df = pd.DataFrame(
+            {
+                "segment": ["AAA", "Indie", "Other", "Other"],
+                "price": [39.99, 4.99, 0.0, 0.0],
+                "peak_ccu": [120000, 9000, 180000, 160000],
+                "is_free": [False, False, True, True],
+                "linux": [True, False, True, False],
+                "positive_ratio": [0.9, 0.95, 0.8, 0.78],
+                "opportunity_score": [78.0, 88.5, 81.0, 72.0],
+                "owners_mid": [2_000_000, 200_000, 5_000_000, 3_000_000],
+                "name": ["AAA Game", "Indie Game", "F2P One", "F2P Two"],
+                "market_tier": ["AAA Premium", "Indie", "Blockbuster F2P", "Blockbuster F2P"],
+                "primary_genre": ["Action", "Indie", "Action", "Action"],
+            }
+        )
+
+        pdf_bytes = build_pdf_report(build_report_context(games_df))
+
+        self.assertTrue(pdf_bytes.startswith(b"%PDF"))
+        self.assertGreater(len(pdf_bytes), 1000)
 
 
 if __name__ == "__main__":

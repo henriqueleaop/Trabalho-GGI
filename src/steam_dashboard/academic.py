@@ -13,7 +13,7 @@ from .paths import (
 
 
 SHIFT_ORDER = ["Manha", "Tarde", "Noite"]
-SOURCE_OPTIONS = ["Operacao da loja", "Mercado Steam", "Tudo junto"]
+SOURCE_OPTIONS = ["Operacao da loja", "Mercado Steam", "Visao integrada"]
 
 
 @dataclass(frozen=True)
@@ -81,71 +81,71 @@ def build_academic_insights(sales_df: pd.DataFrame, customer_df: pd.DataFrame, a
             "group": "Vendas",
             "title": "Dia com maior media de vendas",
             "value": f"{best_day} ({best_day_value:.1f} jogos)",
-            "why": f"{best_day} concentra o melhor desempenho medio de vendas no mes analisado.",
-            "action": f"Reforcar campanhas de destaque e bundles em {best_day}.",
+            "why": f"{best_day} apresenta o melhor desempenho medio de vendas no mes analisado.",
+            "action": f"Recomenda-se concentrar campanhas de destaque e bundles em {best_day}.",
         },
         {
             "group": "Vendas",
             "title": "Relacao entre o melhor e o pior dia",
             "value": f"{best_day_value / worst_day_value:.2f}x",
-            "why": f"{best_day} vende muito mais do que {worst_day}, mostrando uma operacao com picos claros.",
-            "action": f"Usar {worst_day} para campanhas de reativacao e cupons de entrada.",
+            "why": f"{best_day} vende significativamente mais do que {worst_day}, evidenciando uma operacao com picos bem definidos.",
+            "action": f"{worst_day} deve ser tratado como janela prioritaria para acoes de reativacao e ofertas de entrada.",
         },
         {
             "group": "Vendas",
             "title": "Peso de sexta e sabado nas vendas do mes",
             "value": f"{weekend_share:.1f}%",
-            "why": "O fim da semana concentra grande parte da demanda da SteamLoja.",
-            "action": "Concentrar investimento promocional e destaque de vitrine nessa janela.",
+            "why": "O fim da semana concentra uma parcela relevante da demanda da SteamLoja.",
+            "action": "A vitrine principal e o investimento promocional devem ser mais fortes nessa janela.",
         },
         {
             "group": "Vendas",
             "title": "Total vendido e media diaria",
             "value": f"{total_units:,} jogos | media {daily_average:.2f}",
-            "why": "Esse numero define a escala real da operacao analisada e serve de base para metas.",
-            "action": "Usar a media diaria como linha de base para avaliar campanhas futuras.",
+            "why": "Esse numero define a escala da operacao analisada e serve de referencia para metas e comparacoes futuras.",
+            "action": "A media diaria deve ser adotada como linha de base para avaliar o desempenho das proximas campanhas.",
         },
         {
             "group": "Clientes",
             "title": "Genero com maior interesse do publico",
             "value": f"{top_genre} ({top_genre_value:.1f}%)",
             "why": "Esse genero aparece como preferencia dominante no perfil semanal de clientes.",
-            "action": f"Destacar mais ofertas e comunicacao para jogos de {top_genre}.",
+            "action": f"A comunicacao e a curadoria comercial devem dar maior destaque aos jogos de {top_genre}.",
         },
         {
             "group": "Clientes",
             "title": "Participacao conjunta dos generos mais fortes",
             "value": f"{top_three_share:.1f}%",
-            "why": "Os tres generos lideres concentram quase todo o interesse comercial da semana.",
-            "action": "Priorizar catalogo, bundles e anuncios alinhados aos generos lideres.",
+            "why": "Os tres generos lideres concentram a maior parte do interesse comercial observado na semana.",
+            "action": "Catalogo, bundles e anuncios devem priorizar os generos com maior tracao.",
         },
         {
             "group": "Acessos e comportamento",
             "title": "Turno com maior volume de acessos",
             "value": f"{top_shift} ({top_shift_value:.0f} acessos)",
-            "why": "O horario noturno concentra mais visitas e tende a trazer mais conversao potencial.",
-            "action": f"Agendar comunicacao principal e atualizacao de destaque para a {top_shift.lower()}.",
+            "why": "O horario noturno concentra mais visitas e tende a reunir maior potencial de conversao.",
+            "action": f"As principais atualizacoes de vitrine e comunicacao devem ser programadas para a {top_shift.lower()}.",
         },
         {
             "group": "Acessos e comportamento",
             "title": "Dia e turno de maior trafego",
             "value": f"{top_window['weekday']} / {top_window['shift']}",
             "why": "Essa e a janela de maior exposicao da SteamLoja na semana analisada.",
-            "action": "Usar esse pico para lancamentos, bundles premium e vitrine principal.",
+            "action": "Esse pico deve receber lancamentos, bundles premium e o principal destaque de vitrine.",
         },
         {
             "group": "Acessos e comportamento",
             "title": "Janela de baixa demanda para reativacao",
             "value": f"{low_window['weekday']} / {low_window['shift']}",
-            "why": "Esse e o ponto mais fraco de acesso e precisa de acao para reduzir o vale da semana.",
-            "action": "Testar cupom, midweek deal ou bundle de entrada nesse horario.",
+            "why": "Esse e o ponto mais fraco de acesso da semana e exige intervencao para reduzir o vale operacional.",
+            "action": "Vale testar cupom, oferta leve ou bundle de entrada nesse horario.",
         },
         {
             "group": "Acessos e comportamento",
             "title": "Melhor combinacao comercial do recorte",
             "value": f"{best_conversion_day} + {top_genre} + {top_shift}",
-            "why": "A combinacao junta o melhor dia de venda, o genero de maior interesse e o turno de maior trafego.",
-            "action": f"Montar a campanha principal da SteamLoja em {best_conversion_day} a {top_shift.lower()}, com foco em {top_genre}.",
+            "why": "A combinacao reune o melhor dia de venda, o genero de maior interesse e o turno de maior trafego.",
+            "action": f"A campanha principal da SteamLoja deve ser organizada em {best_conversion_day}, no turno da {top_shift.lower()}, com foco em {top_genre}.",
         },
     ]
 
@@ -178,8 +178,8 @@ def build_market_anchors(games_df: pd.DataFrame) -> dict[str, object]:
         "linux_share_top": linux_share,
         "opportunities": opportunities,
         "indicator_formula": (
-            "Indicador composto = owners + aprovacao + engajamento + acessibilidade de preco. "
-            "Ele ajuda a priorizar leitura comercial, mas nao substitui validacao manual."
+            "Indicador composto: combina base estimada de owners, aprovacao do publico, engajamento e acessibilidade de preco. "
+            "Ele orienta a leitura comercial do catalogo, mas nao substitui avaliacao qualitativa."
         ),
     }
 
@@ -204,60 +204,60 @@ def build_strategy_payload(
 
     return {
         "summary": (
-            f"A SteamLoja tem pico comercial em {best_day}, prefere o genero {top_genre} e recebe mais visitas no turno da {top_shift.lower()}. "
-            f"O plano prioriza ocupar o vale de {low_window} sem perder o folego da janela forte. "
-            f"No mercado Steam, a distancia de preco entre AAA e Indie e de ${price_diff:,.2f}, "
-            f"com {free_share:.1f}% de jogos gratis no topo e {linux_share:.1f}% de suporte Linux entre os titulos mais populares."
+            f"A SteamLoja apresenta seu melhor desempenho comercial em {best_day}, maior interesse do publico em {top_genre} "
+            f"e pico de visitas no turno da {top_shift.lower()}. O plano proposto busca reduzir o vale de {low_window} sem comprometer a janela mais forte de conversao. "
+            f"Como referencia externa, o mercado Steam mostra diferenca de ${price_diff:,.2f} entre AAA e Indie, "
+            f"com {free_share:.1f}% de jogos gratuitos entre os titulos mais populares e {linux_share:.1f}% de suporte Linux nesse grupo."
         ),
         "three_months": [
             {
-                "do": f"Reforcar a vitrine principal em {best_day} com foco na combinacao {best_combo}.",
-                "because": "Esse e o ponto mais forte de demanda e concentracao de interesse.",
-                "impact": "Aumenta conversao sem elevar complexidade operacional.",
+                "do": f"Reforcar a vitrine principal em {best_day}, com foco na combinacao {best_combo}.",
+                "because": "Essa e a janela de maior demanda e concentracao de interesse do recorte analisado.",
+                "impact": "A medida tende a elevar a conversao sem aumentar significativamente a complexidade operacional.",
             },
             {
                 "do": f"Criar uma campanha de reativacao para {low_window}.",
-                "because": "Esse e o vale mais claro da semana em acessos e precisa ser corrigido.",
-                "impact": "Reduz ociosidade e melhora a distribuicao das vendas ao longo da semana.",
+                "because": "Esse e o principal vale semanal de acesso e precisa ser tratado com prioridade.",
+                "impact": "A acao reduz ociosidade e melhora a distribuicao das vendas ao longo da semana.",
             },
             {
                 "do": "Organizar bundles simples por genero lider e ticket de entrada.",
-                "because": "O publico ja mostrou preferencia forte por poucos generos centrais.",
-                "impact": "Acelera decisao de compra e facilita a comunicacao da loja.",
+                "because": "O publico demonstrou preferencia clara por poucos generos centrais.",
+                "impact": "Isso tende a acelerar a decisao de compra e simplificar a comunicacao da loja.",
             },
         ],
         "six_months": [
             {
                 "do": "Criar rotina mensal de leitura de indicadores e ajuste de calendario promocional.",
-                "because": "A operacao precisa transformar dado em decisao recorrente, nao em analise pontual.",
-                "impact": "Melhora previsibilidade comercial e disciplina gerencial.",
+                "because": "A operacao precisa transformar dados em decisao recorrente, e nao em analise eventual.",
+                "impact": "A iniciativa melhora previsibilidade comercial e disciplina gerencial.",
             },
             {
                 "do": "Ampliar a curadoria de jogos alinhados a Linux e SteamOS.",
-                "because": "A Valve segue investindo em plataforma aberta e compatibilidade, especialmente apos o Steam Deck.",
-                "impact": "Posiciona a SteamLoja mais perto das tendencias reais do ecossistema Steam.",
+                "because": "A Valve continua investindo em plataforma aberta e compatibilidade, especialmente apos o Steam Deck.",
+                "impact": "Isso posiciona a SteamLoja mais perto das tendencias reais do ecossistema Steam.",
             },
             {
                 "do": "Testar campanhas tematicas inspiradas em weekly deals e eventos sazonais.",
-                "because": "A divulgacao da Steam se apoia em ritual promocional recorrente e facil de comunicar.",
-                "impact": "Gera previsibilidade de audiencia e aumenta lembranca de marca.",
+                "because": "A divulgacao da Steam se apoia em rituais promocionais recorrentes e de facil comunicacao.",
+                "impact": "A medida tende a gerar previsibilidade de audiencia e aumentar lembranca de marca.",
             },
         ],
         "one_year": [
             {
                 "do": "Abrir uma frente comercial para hardware, gift cards e acessorios do ecossistema Steam.",
                 "because": "A transicao de Steam Machine para Steam Deck mostra que a aderencia vem do ecossistema, nao de um produto isolado.",
-                "impact": "Diversifica receita e fortalece a identidade da SteamLoja.",
+                "impact": "A estrategia diversifica receita e fortalece a identidade da SteamLoja.",
             },
             {
                 "do": "Evoluir o painel para monitoramento continuo com mais fontes do mercado Steam.",
-                "because": "O trabalho atual prova valor, mas a maturidade depende de acompanhamento regular.",
-                "impact": "Permite planejamento anual com menos intuicao e mais evidencia.",
+                "because": "O trabalho atual demonstra valor, mas a maturidade depende de acompanhamento continuo.",
+                "impact": "Isso permite planejamento anual com menos intuicao e mais evidencia.",
             },
             {
                 "do": "Construir experiencias proprias de divulgacao, como calendario de eventos e recomendacoes editoriais.",
-                "because": "A Steam nao depende so de preco: depende de descoberta, comunidade e repertorio de vitrine.",
-                "impact": "Melhora diferenciacao competitiva e fidelizacao.",
+                "because": "A Steam nao depende apenas de preco, mas tambem de descoberta, comunidade e repertorio de vitrine.",
+                "impact": "A medida fortalece diferenciacao competitiva e fidelizacao.",
             },
         ],
         "demands": [
@@ -288,28 +288,28 @@ def build_strategy_payload(
         "actions": [
             {
                 "title": "Campanhas de reativacao na janela fraca",
-                "do": f"Fazer isso: ativar bundles leves e cupons em {low_window}.",
-                "because": "Por causa disso: esse e o ponto mais fraco da semana em acesso e potencial de venda.",
-                "impact": "Impacto esperado: reduzir o vale operacional e gerar receita incremental.",
+                "do": f"Ativar bundles leves e cupons em {low_window}.",
+                "because": "Esse e o ponto mais fraco da semana em acesso e potencial de venda.",
+                "impact": "A tendencia e reduzir o vale operacional e gerar receita incremental.",
             },
             {
                 "title": "Vitrine principal no melhor combo comercial",
-                "do": f"Fazer isso: concentrar a campanha principal em {best_combo}.",
-                "because": "Por causa disso: essa combinacao une o melhor dia, o genero dominante e o turno de maior trafego.",
-                "impact": "Impacto esperado: elevar conversao nas janelas de maior retorno.",
+                "do": f"Concentrar a campanha principal em {best_combo}.",
+                "because": "Essa combinacao une o melhor dia, o genero dominante e o turno de maior trafego.",
+                "impact": "A expectativa e elevar a conversao nas janelas de maior retorno.",
             },
             {
                 "title": "Curadoria alinhada ao ecossistema Valve",
-                "do": "Fazer isso: ampliar produtos e comunicacao ligados a Linux, SteamOS e Steam Deck.",
-                "because": "Por causa disso: a Valve migrou de tentativas isoladas para um ecossistema integrado e hoje colhe resultado com o Steam Deck.",
-                "impact": "Impacto esperado: tornar a SteamLoja mais atual, coerente e dificil de refutar na defesa.",
+                "do": "Ampliar produtos e comunicacao ligados a Linux, SteamOS e Steam Deck.",
+                "because": "A Valve migrou de tentativas isoladas para um ecossistema integrado e hoje colhe resultado com o Steam Deck.",
+                "impact": "Isso torna a SteamLoja mais atual, coerente e mais solida para a defesa academica.",
             },
         ],
         "market_connection": (
             "O plano posiciona a SteamLoja como uma empresa ficticia coerente com o mercado real. "
             "Ele aproveita a logica promocional da Steam, observa a forca do free-to-play, reconhece a distancia entre AAA e Indie "
             "e usa suporte Linux como sinal de proximidade com a estrategia de SteamOS e Steam Deck. "
-            f"O faturamento observado no mes base foi de R${revenue_total:,.0f}, o que reforca a necessidade de proteger os dias fortes e recuperar os dias fracos."
+            f"O faturamento observado no mes-base foi de R${revenue_total:,.0f}, o que reforca a necessidade de proteger os dias fortes e recuperar os dias fracos."
         ),
     }
 
