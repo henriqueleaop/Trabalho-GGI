@@ -10,85 +10,139 @@ if str(SRC) not in sys.path:
 
 import pandas as pd
 
-from steam_dashboard.insights import build_report_payload
-from steam_dashboard.paths import DEFAULT_CCU_HISTORY, DEFAULT_PROCESSED_CSV, DEFAULT_PROCESSED_PARQUET
+from steam_dashboard.academic import (
+    build_academic_insights,
+    build_market_anchors,
+    build_sales_calendar_table,
+    build_strategy_payload,
+    load_academic_sources,
+)
+from steam_dashboard.paths import DEFAULT_PROCESSED_CSV, DEFAULT_PROCESSED_PARQUET
 
 
-def load_games():
+def load_games() -> pd.DataFrame:
     if DEFAULT_PROCESSED_PARQUET.exists():
         return pd.read_parquet(DEFAULT_PROCESSED_PARQUET)
     return pd.read_csv(DEFAULT_PROCESSED_CSV, parse_dates=["release_date"])
 
 
-def load_ccu():
-    if not DEFAULT_CCU_HISTORY.exists():
-        return pd.DataFrame()
-    return pd.read_csv(DEFAULT_CCU_HISTORY, parse_dates=["captured_at"])
+def build_markdown(games_df: pd.DataFrame) -> str:
+    sources = load_academic_sources()
+    insights = build_academic_insights(sources.sales, sources.customer_profile, sources.store_access)
+    anchors = build_market_anchors(games_df)
+    strategy = build_strategy_payload(insights, anchors, sources.sales, sources.customer_profile, sources.store_access)
+    sales_calendar = build_sales_calendar_table(sources.sales)
 
-
-def build_markdown(payload: dict, games_df: pd.DataFrame, ccu_df: pd.DataFrame) -> str:
+    sales_calendar_md = "```text\n" + sales_calendar.to_string() + "\n```"
+    customer_md = (
+        "```text\n"
+        + sources.customer_profile.pivot(index="weekday", columns="genre", values="customer_share_pct").to_string()
+        + "\n```"
+    )
+    access_md = (
+        "```text\n"
+        + sources.store_access.pivot(index="weekday", columns="shift", values="visits").to_string()
+        + "\n```"
+    )
     insights_md = "\n".join(
-        f"{index}. **{item['title']}**: {item['value']} - {item['detail']}"
-        for index, item in enumerate(payload["insights"], start=1)
+        f"{index}. **{item['title']}**: {item['value']} - {item['why']} Acao sugerida: {item['action']}"
+        for index, item in enumerate(insights, start=1)
     )
     opportunities_md = "\n".join(
-        f"- {item['name']} | {item['market_tier']} | {item['primary_genre']} | ${item['price']:.2f} | score {item['opportunity_score']:.1f}"
-        for item in payload["top_opportunities"][:10]
+        f"- {item['name']} | {item['market_tier']} | {item['primary_genre']} | ${item['price']:.2f} | indicador {item['indicador_composto']:.1f} | Linux: {'Sim' if item['linux'] else 'Nao'}"
+        for item in anchors["opportunities"]
+    )
+    action_md = "\n".join(
+        f"- **{item['title']}**: {item['do']} {item['because']} {item['impact']}"
+        for item in strategy["actions"]
     )
 
-    operational_md = "Sem snapshots operacionais."
-    snapshot = payload["operational_snapshot"]
-    if snapshot is not None and not snapshot.empty:
-        lines = []
-        for _, row in snapshot.head(10).iterrows():
-            lines.append(
-                f"- {row['name']}: {int(row['current_players']):,} jogadores agora, {row['utilization_pct']:.1f}% do pico historico."
-            )
-        operational_md = "\n".join(lines)
+    return f"""# SteamLoja Academica
 
-    strategy = payload["strategy"]
-    return f"""# Steam Decision Report
+## Introducao
 
-## Resumo executivo
+Este relatorio apresenta a SteamLoja como empresa ficticia inspirada no ecossistema Steam. O objetivo e mostrar a passagem de dado bruto para informacao gerencial e, depois, para planejamento estrategico.
 
-- Jogos processados: {len(games_df):,}
-- Snapshots operacionais: {len(ccu_df):,}
-- Pontos unicos de coleta: {ccu_df['captured_at'].nunique() if not ccu_df.empty else 0}
-- Sintese: {strategy['summary']}
+## Fase 1: Coleta e Organizacao
 
-## 10 informacoes gerenciais
+Nesta etapa a SteamLoja apenas observa o funcionamento da operacao.
+
+### Fonte 1: Vendas diarias do mes
+
+{sales_calendar_md}
+
+### Fonte 2: Perfil de clientes por genero
+
+{customer_md}
+
+### Fonte 3: Acessos por turno
+
+{access_md}
+
+## Fase 2: Processamento e Insights
+
+### 10 informacoes estrategicas
 
 {insights_md}
 
-## Radar de oportunidade
+### Ancoras de mercado Steam
+
+- Diferenca de preco mediano entre AAA e Indie: ${anchors['price_diff']:,.2f}
+- Participacao de jogos gratis no topo: {anchors['free_share_top']:.1f}%
+- Presenca de suporte Linux no topo: {anchors['linux_share_top']:.1f}%
+
+### Jogos com maior potencial
 
 {opportunities_md}
 
-## Monitoramento operacional
+### Indicador composto de oportunidade
 
-{operational_md}
+{anchors['indicator_formula']}
 
-## Estrategia de 3, 6 e 12 meses
+## Fase 3: Planejamento Estrategico
 
-### 3 meses
-""" + "\n".join(f"- {item}" for item in strategy["three_months"]) + """
+### Resumo executivo
 
-### 6 meses
-""" + "\n".join(f"- {item}" for item in strategy["six_months"]) + """
+{strategy['summary']}
 
-### 1 ano
-""" + "\n".join(f"- {item}" for item in strategy["one_year"]) + f"""
+### Cronograma de 3 meses
+""" + "\n".join(
+        f"- Fazer isso: {item['do']} Por causa disso: {item['because']} Impacto esperado: {item['impact']}"
+        for item in strategy["three_months"]
+    ) + """
 
-## Demandas, prioridades e riscos
+### Cronograma de 6 meses
+""" + "\n".join(
+        f"- Fazer isso: {item['do']} Por causa disso: {item['because']} Impacto esperado: {item['impact']}"
+        for item in strategy["six_months"]
+    ) + """
 
-### Demandas
-{chr(10).join(f"- {item}" for item in strategy["demands"])}
+### Cronograma de 1 ano
+""" + "\n".join(
+        f"- Fazer isso: {item['do']} Por causa disso: {item['because']} Impacto esperado: {item['impact']}"
+        for item in strategy["one_year"]
+    ) + f"""
+
+### Demandas e tarefas
+{chr(10).join(f"- {item}" for item in strategy["demands"] + strategy["tasks"])}
 
 ### Prioridades
 {chr(10).join(f"- {item}" for item in strategy["priorities"])}
 
-### Riscos
-{chr(10).join(f"- {item}" for item in strategy["risks"])}
+### Riscos e contingencias
+{chr(10).join(f"- {item}" for item in strategy["risks"] + strategy["contingencies"])}
+
+### 3 acoes estrategicas principais
+{action_md}
+
+### Conexao com o mercado
+{strategy['market_connection']}
+
+## Aderencia as decisoes reais da Steam/Valve
+
+- A leitura de Linux e SteamOS aproxima o trabalho da estrategia de plataforma aberta da Valve.
+- O foco em eventos, weekly deals e bundles reflete a forma como a Steam organiza divulgacao e descoberta.
+- A referencia a Steam Machine -> Steam Deck reforca que o ecossistema da Valve amadureceu de tentativa isolada para proposta integrada.
 """
 
 
@@ -98,9 +152,7 @@ def main() -> None:
     args = parser.parse_args()
 
     games_df = load_games()
-    ccu_df = load_ccu()
-    payload = build_report_payload(games_df, ccu_df if not ccu_df.empty else None)
-    markdown = build_markdown(payload, games_df, ccu_df)
+    markdown = build_markdown(games_df)
 
     output_path = Path(args.output)
     output_path.parent.mkdir(parents=True, exist_ok=True)
