@@ -7,6 +7,7 @@ RAW_DIR = DATA_DIR / "raw"
 PROCESSED_DIR = DATA_DIR / "processed"
 MONITORING_DIR = DATA_DIR / "monitoring"
 ACADEMIC_DIR = DATA_DIR / "academic"
+CONTEXT_DIR = DATA_DIR / "context"
 OUTPUT_DIR = ROOT_DIR / "output"
 OUTPUT_PDF_DIR = OUTPUT_DIR / "pdf"
 
@@ -17,8 +18,12 @@ DEFAULT_CCU_HISTORY = MONITORING_DIR / "ccu_snapshots.csv"
 DEFAULT_ACADEMIC_DAILY_SALES = ACADEMIC_DIR / "daily_sales_month.csv"
 DEFAULT_ACADEMIC_CUSTOMER_PROFILE = ACADEMIC_DIR / "customer_genre_profile_week.csv"
 DEFAULT_ACADEMIC_STORE_ACCESS = ACADEMIC_DIR / "store_access_shift_week.csv"
+DEFAULT_CONTEXT_PLATFORM_SHIFT = CONTEXT_DIR / "platform_shift.csv"
+DEFAULT_CONTEXT_WINDOWS_FRICTION = CONTEXT_DIR / "windows_friction.csv"
+DEFAULT_CONTEXT_HARDWARE_COST = CONTEXT_DIR / "hardware_cost_pressure.csv"
+DEFAULT_CONTEXT_PIRACY = CONTEXT_DIR / "piracy_pressure.csv"
 
 
 def ensure_directories() -> None:
-    for path in (DATA_DIR, RAW_DIR, PROCESSED_DIR, MONITORING_DIR, ACADEMIC_DIR, OUTPUT_DIR, OUTPUT_PDF_DIR):
+    for path in (DATA_DIR, RAW_DIR, PROCESSED_DIR, MONITORING_DIR, ACADEMIC_DIR, CONTEXT_DIR, OUTPUT_DIR, OUTPUT_PDF_DIR):
         path.mkdir(parents=True, exist_ok=True)

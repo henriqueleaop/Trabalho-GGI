@@ -9,6 +9,7 @@ from src.steam_dashboard.academic import (
     build_strategy_payload,
     load_academic_sources,
 )
+from src.steam_dashboard.context_sources import build_external_insights, build_piracy_support, load_context_sources
 from src.steam_dashboard.reporting import build_pdf_report, build_report_context
 
 
@@ -16,6 +17,7 @@ class AcademicTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.sources = load_academic_sources()
+        cls.context_sources = load_context_sources()
 
     def test_load_academic_sources(self):
         sources = self.sources
@@ -77,15 +79,18 @@ class AcademicTests(unittest.TestCase):
 
     def test_build_academic_insights(self):
         sources = self.sources
-        insights = build_academic_insights(sources.sales, sources.customer_profile, sources.store_access)
+        insights = build_academic_insights(sources.sales, sources.customer_profile, sources.store_access, self.context_sources)
 
-        self.assertEqual(len(insights), 10)
+        self.assertEqual(len(insights), 14)
         self.assertTrue(insights[0]["value"].startswith("Sabado (") or insights[0]["value"].startswith("Sexta ("))
         self.assertIn("Action", insights[4]["value"])
         self.assertIn("Noite", insights[6]["value"])
         self.assertIn("/", insights[7]["value"])
         self.assertIn("/", insights[8]["value"])
         self.assertIn(" + ", insights[9]["value"])
+        self.assertIn("Linux", insights[10]["value"])
+        self.assertIn("24.48%", insights[11]["value"])
+        self.assertIn("26 apps", insights[12]["value"])
 
     def test_build_market_anchors_and_strategy(self):
         games_df = pd.DataFrame(
@@ -104,9 +109,9 @@ class AcademicTests(unittest.TestCase):
             }
         )
         sources = self.sources
-        insights = build_academic_insights(sources.sales, sources.customer_profile, sources.store_access)
+        insights = build_academic_insights(sources.sales, sources.customer_profile, sources.store_access, self.context_sources)
         anchors = build_market_anchors(games_df)
-        strategy = build_strategy_payload(insights, anchors, sources.sales, sources.customer_profile, sources.store_access)
+        strategy = build_strategy_payload(insights, anchors, sources.sales, sources.customer_profile, sources.store_access, self.context_sources)
 
         self.assertAlmostEqual(anchors["price_diff"], 35.0)
         self.assertIn("Indicador composto", anchors["indicator_formula"])
@@ -115,13 +120,25 @@ class AcademicTests(unittest.TestCase):
         self.assertEqual(len(strategy["one_year"]), 3)
         self.assertEqual(len(strategy["actions"]), 3)
         self.assertIn("SteamLoja", strategy["summary"])
+        self.assertIn("SteamOS", strategy["six_months"][0]["do"])
+        self.assertIn("Info 14", strategy["one_year"][0]["supports"])
 
     def test_methodology_note(self):
-        note = build_methodology_note(self.sources)
+        note = build_methodology_note(self.sources, self.context_sources)
 
         self.assertIn("grao detalhado", note)
         self.assertIn("pedidos", note)
         self.assertIn("sessoes", note)
+        self.assertIn("leituras externas reais", note)
+
+    def test_context_sources_and_supporting_blocks(self):
+        external_insights = build_external_insights(self.context_sources)
+        piracy_support = build_piracy_support(self.context_sources)
+
+        self.assertEqual(len(external_insights), 4)
+        self.assertEqual(len(piracy_support), 2)
+        self.assertTrue(all(item["source_name"] for item in external_insights))
+        self.assertTrue(all(item["source_url"].startswith("http") for item in piracy_support))
 
     def test_build_pdf_report(self):
         try:

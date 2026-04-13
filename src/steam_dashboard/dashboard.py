@@ -15,6 +15,7 @@ from .academic import (
     build_strategy_payload,
     load_academic_sources,
 )
+from .context_sources import build_context_overview_cards, build_context_reference_table, build_piracy_support, load_context_sources
 from .insights import WEEKDAY_ORDER
 from .paths import DEFAULT_PROCESSED_CSV, DEFAULT_PROCESSED_PARQUET
 from .reporting import build_pdf_report, build_report_context
@@ -345,6 +346,13 @@ THEME = f"""
     .stMarkdown, .stMarkdown p, .stMarkdown li, .stMarkdown strong, .stMarkdown em {{
         color: var(--text-primary);
     }}
+    .stApp a, .stApp a:visited {{
+        color: var(--blue) !important;
+        text-decoration: none;
+    }}
+    .stApp a:hover {{
+        text-decoration: underline;
+    }}
     h1, h2, h3, h4, h5, h6 {{
         color: var(--text-primary) !important;
         letter-spacing: -0.02em;
@@ -368,12 +376,17 @@ def load_games_data() -> pd.DataFrame:
 @st.cache_data(show_spinner=False)
 def load_store_sources() -> dict[str, object]:
     sources = load_academic_sources()
+    context_sources = load_context_sources()
     return {
         "sales": sources.sales,
         "customer_profile": sources.customer_profile,
         "store_access": sources.store_access,
         "sales_calendar": build_sales_calendar_table(sources.sales),
-        "methodology_note": build_methodology_note(sources),
+        "methodology_note": build_methodology_note(sources, context_sources),
+        "context_sources": context_sources,
+        "context_overview_cards": build_context_overview_cards(context_sources),
+        "context_reference_table": build_context_reference_table(context_sources),
+        "piracy_support": build_piracy_support(context_sources),
     }
 
 
@@ -456,6 +469,26 @@ def render_surface_card(title: str, body: str) -> None:
             "<div class='card-kicker'>Resumo</div>"
             f"<div class='card-title'>{title}</div>"
             f"<p class='card-body'>{body}</p>"
+            "</div>"
+        ),
+        unsafe_allow_html=True,
+    )
+
+
+def render_reference_card(title: str, body: str, decision: str, source_name: str, source_url: str, period: str) -> None:
+    source_html = (
+        f"<p class='card-body'><strong>Fonte:</strong> <a href='{source_url}' target='_blank'>{source_name}</a> | <strong>Periodo:</strong> {period}</p>"
+        if source_url
+        else f"<p class='card-body'><strong>Fonte:</strong> {source_name} | <strong>Periodo:</strong> {period}</p>"
+    )
+    st.markdown(
+        (
+            "<div class='surface-card'>"
+            "<div class='card-kicker'>Fonte externa</div>"
+            f"<div class='card-title'>{title}</div>"
+            f"<p class='card-body'>{body}</p>"
+            f"<p class='card-body'><strong>Como sustenta a decisao:</strong> {decision}</p>"
+            f"{source_html}"
             "</div>"
         ),
         unsafe_allow_html=True,
@@ -572,6 +605,8 @@ def render_phase_one(store_sources: dict[str, object], source_mode: str) -> None
     customer_df = store_sources["customer_profile"]
     access_df = store_sources["store_access"]
     methodology_note = store_sources.get("methodology_note")
+    context_overview_cards = store_sources.get("context_overview_cards", [])
+    context_reference_table = store_sources.get("context_reference_table")
 
     render_signal_card(
         "Fase 1: leitura operacional da SteamLoja",
@@ -673,10 +708,41 @@ def render_phase_one(store_sources: dict[str, object], source_mode: str) -> None
         apply_chart_style(fig_heatmap, height=410, xaxis_title="Turno", yaxis_title="Dia")
         st.plotly_chart(fig_heatmap, width="stretch")
 
+    st.markdown("<div class='phase-section'></div>", unsafe_allow_html=True)
+    render_signal_card(
+        "Fontes externas de contexto estrategico",
+        "A operacao da SteamLoja continua sendo o nucleo do trabalho, mas o planejamento de medio e longo prazo passa a observar tambem sinais reais de plataforma, Windows, custo de hardware e monetizacao.",
+    )
+    columns = st.columns(2)
+    for index, item in enumerate(context_overview_cards):
+        with columns[index % 2]:
+            render_reference_card(
+                item["title"],
+                item["body"],
+                item["decision"],
+                item["source_name"],
+                item["source_url"],
+                item["period"],
+            )
+    if context_reference_table is not None:
+        st.dataframe(context_reference_table, width="stretch", hide_index=True)
+
 
 def render_insight_cards(insights: list[dict[str, str]]) -> None:
     columns = st.columns(2)
     for index, insight in enumerate(insights):
+        source_html = ""
+        if insight.get("source_name"):
+            if insight.get("source_url"):
+                source_html = (
+                    f"<p class='card-body'><strong>Fonte:</strong> <a href='{insight['source_url']}' target='_blank'>{insight['source_name']}</a>"
+                    f" | <strong>Periodo:</strong> {insight.get('period', '')}</p>"
+                )
+            else:
+                source_html = (
+                    f"<p class='card-body'><strong>Fonte:</strong> {insight['source_name']}"
+                    f" | <strong>Periodo:</strong> {insight.get('period', '')}</p>"
+                )
         columns[index % 2].markdown(
             (
                 "<div class='insight-card'>"
@@ -685,6 +751,7 @@ def render_insight_cards(insights: list[dict[str, str]]) -> None:
                 f"<div class='value'>{insight['value']}</div>"
                 f"<p class='card-body'><strong>Por que isso importa:</strong> {insight['why']}</p>"
                 f"<p class='card-body'><strong>Implicacao gerencial:</strong> {insight['action']}</p>"
+                f"{source_html}"
                 "</div>"
             ),
             unsafe_allow_html=True,
@@ -708,17 +775,41 @@ def render_market_anchor_cards(anchors: dict[str, object]) -> None:
 
 
 def render_phase_two(store_sources: dict[str, object], filtered_games: pd.DataFrame, source_mode: str) -> tuple[list[dict[str, str]], dict[str, object], dict[str, object]]:
-    insights = build_academic_insights(store_sources["sales"], store_sources["customer_profile"], store_sources["store_access"])
+    context_sources = store_sources["context_sources"]
+    insights = build_academic_insights(store_sources["sales"], store_sources["customer_profile"], store_sources["store_access"], context_sources)
     anchors = build_market_anchors(filtered_games)
-    strategy = build_strategy_payload(insights, anchors, store_sources["sales"], store_sources["customer_profile"], store_sources["store_access"])
+    strategy = build_strategy_payload(
+        insights,
+        anchors,
+        store_sources["sales"],
+        store_sources["customer_profile"],
+        store_sources["store_access"],
+        context_sources,
+    )
 
     render_signal_card(
         "Fase 2: transformacao dos dados em informacao gerencial",
-        "Nesta fase, a analise deixa de apenas descrever a operacao e passa a destacar relacoes, prioridades e oportunidades de decisao que podem ser defendidas com clareza.",
+        "Nesta fase, a analise deixa de apenas descrever a operacao e passa a combinar 10 sinais internos da SteamLoja com 4 sinais externos de plataforma e hardware para sustentar o medio e longo prazo.",
     )
-    grouped_labels = ["10 informacoes gerenciais", "Vendas, clientes e acessos", f"Fonte ativa: {source_mode}"]
+    grouped_labels = ["14 informacoes estrategicas", "Operacao + plataforma + hardware", f"Fonte ativa: {source_mode}"]
     render_chips(grouped_labels)
     render_insight_cards(insights)
+
+    render_signal_card(
+        "Apoio de monetizacao e pirataria",
+        "Os sinais abaixo nao entram nas 14 informacoes principais para evitar excesso de cards, mas ajudam a defender por que conveniencia, ecossistema e hardware oficial podem capturar mais valor do que depender apenas de DRM.",
+    )
+    support_columns = st.columns(2)
+    for column, item in zip(support_columns, store_sources["piracy_support"], strict=False):
+        with column:
+            render_reference_card(
+                item["title"],
+                item["why"],
+                item["action"],
+                item["source_name"],
+                item["source_url"],
+                item["period"],
+            )
 
     col_a, col_b = st.columns(2)
     with col_a:
@@ -786,7 +877,7 @@ def render_phase_two(store_sources: dict[str, object], filtered_games: pd.DataFr
 
 def render_timeline_column(title: str, items: list[dict[str, str]]) -> None:
     body = "".join(
-        f"<p><strong>Fazer isso:</strong> {item['do']}</p><p><strong>Por causa disso:</strong> {item['because']}</p><p><strong>Impacto esperado:</strong> {item['impact']}</p><hr style='border-color:rgba(255,255,255,0.14); margin:0.85rem 0;'/>"
+        f"<p><strong>Fazer isso:</strong> {item['do']}</p><p><strong>Por causa disso:</strong> {item['because']}</p><p><strong>Impacto esperado:</strong> {item['impact']}</p><p><strong>Sustentado por:</strong> {item.get('supports', 'Leitura consolidada')}</p><hr style='border-color:rgba(255,255,255,0.14); margin:0.85rem 0;'/>"
         for item in items
     )
     st.markdown(
@@ -843,12 +934,19 @@ def render_phase_three(store_sources: dict[str, object], strategy: dict[str, obj
                 f"<p class='card-body'><strong>Proposta:</strong> {action['do']}</p>"
                 f"<p class='card-body'><strong>Justificativa:</strong> {action['because']}</p>"
                 f"<p class='card-body'><strong>Resultado esperado:</strong> {action['impact']}</p>"
+                f"<p class='card-body'><strong>Sustentado por:</strong> {action.get('supports', 'Leitura consolidada')}</p>"
                 "</div>"
             ),
             unsafe_allow_html=True,
         )
 
     render_surface_card("Conexao com o mercado", str(strategy["market_connection"]))
+    st.markdown(
+        "<div class='surface-card'><div class='card-kicker'>Hipotese futura</div><div class='card-title'>Assinatura nao priorizada</div><ul class='card-list'>"
+        + "".join(f"<li>{item}</li>" for item in strategy["future_opportunities"])
+        + "</ul></div>",
+        unsafe_allow_html=True,
+    )
 
 
 def render_export_controls(games_df: pd.DataFrame) -> None:
@@ -899,11 +997,17 @@ def run_app() -> None:
         insights, anchors, strategy = render_phase_two(store_sources, filtered_games, source_mode)
     with tabs[2]:
         strategy = build_strategy_payload(
-            build_academic_insights(store_sources["sales"], store_sources["customer_profile"], store_sources["store_access"]),
+            build_academic_insights(
+                store_sources["sales"],
+                store_sources["customer_profile"],
+                store_sources["store_access"],
+                store_sources["context_sources"],
+            ),
             build_market_anchors(filtered_games),
             store_sources["sales"],
             store_sources["customer_profile"],
             store_sources["store_access"],
+            store_sources["context_sources"],
         )
         render_export_controls(filtered_games)
         render_phase_three(store_sources, strategy, source_mode)
