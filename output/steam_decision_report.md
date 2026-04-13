@@ -8,29 +8,33 @@ Este relatorio apresenta a SteamLoja como empresa ficticia inspirada no ecossist
 
 Nesta etapa a SteamLoja apenas observa o funcionamento da operacao.
 
+### Nota de metodologia
+
+A camada academica foi modelada em grao detalhado e depois consolidada para apresentacao. O recorte inclui 193,935 pedidos, 110,487 sinais de perfil de cliente e 131,966 sessoes de acesso, distribuidos por pais, canal, campanha, dispositivo e genero.
+
 ### Fonte 1: Vendas diarias do mes
 
 ```text
-weekday      Segunda       Terca      Quarta      Quinta       Sexta      Sabado     Domingo
-Semana 1   Dia 2: 58   Dia 3: 23   Dia 4: 57   Dia 5: 31   Dia 6: 94   Dia 7: 79   Dia 1: 24
-Semana 2   Dia 9: 62  Dia 10: 28  Dia 11: 55  Dia 12: 33  Dia 13: 91  Dia 14: 77   Dia 8: 15
-Semana 3  Dia 16: 53  Dia 17: 21  Dia 18: 59  Dia 19: 26  Dia 20: 95  Dia 21: 70  Dia 15: 19
-Semana 4  Dia 23: 45  Dia 24: 25  Dia 25: 48  Dia 26: 20  Dia 27: 92  Dia 28: 68  Dia 22: 27
-Semana 5  Dia 30: 57  Dia 31: 27           -           -           -           -  Dia 29: 34
+weekday         Segunda          Terca         Quarta         Quinta           Sexta          Sabado        Domingo
+Semana 1   Dia 2: 5,565   Dia 3: 4,691   Dia 4: 5,759   Dia 5: 5,814    Dia 6: 9,894   Dia 7: 11,595   Dia 1: 4,199
+Semana 2   Dia 9: 5,746  Dia 10: 5,029  Dia 11: 5,608  Dia 12: 5,344   Dia 13: 9,175  Dia 14: 10,583   Dia 8: 4,152
+Semana 3  Dia 16: 5,158  Dia 17: 4,797  Dia 18: 5,877  Dia 19: 5,931  Dia 20: 10,660  Dia 21: 12,409  Dia 15: 3,854
+Semana 4  Dia 23: 5,191  Dia 24: 4,429  Dia 25: 6,251  Dia 26: 5,523   Dia 27: 9,641  Dia 28: 11,048  Dia 22: 4,559
+Semana 5  Dia 30: 5,611  Dia 31: 4,774              -              -               -               -  Dia 29: 4,135
 ```
 
 ### Fonte 2: Perfil de clientes por genero
 
 ```text
-genre    Action  Estrategia  Indie  RPG  Simulacao
-weekday                                           
-Segunda      43           5     20   24          8
-Terca        41           5     21   25          8
-Quarta       44           5     19   24          8
-Quinta       42           5     20   25          8
-Sexta        46           5     18   23          8
-Sabado       47           5     18   22          8
-Domingo      45           5     19   23          8
+genre    Action  Co-op  Indie    RPG  Simulation  Sports  Strategy
+weekday                                                           
+Segunda   26.13   9.20  16.20  20.26        9.71    7.07     11.43
+Terca     26.00   9.11  17.08  19.25        9.85    7.05     11.66
+Quarta    26.36   9.05  16.72  20.02        9.93    6.94     10.98
+Quinta    26.12   8.88  17.21  20.46        9.56    6.57     11.21
+Sexta     27.61  10.75  15.16  19.53        9.70    6.54     10.71
+Sabado    27.97  10.48  14.62  20.18        9.68    6.49     10.58
+Domingo   26.13   9.34  16.62  20.44        9.71    7.00     10.76
 ```
 
 ### Fonte 3: Acessos por turno
@@ -38,29 +42,29 @@ Domingo      45           5     19   23          8
 ```text
 shift    Manha  Tarde  Noite
 weekday                     
-Segunda    620    930   1280
-Terca      540    880   1160
-Quarta     660    980   1340
-Quinta     590    910   1250
-Sexta      840   1490   1980
-Sabado     910   1650   2140
-Domingo    430    770    980
+Segunda   3588   5163   7619
+Terca     3279   4913   6949
+Quarta    3829   5593   8180
+Quinta    3535   5444   7958
+Sexta     4977   7862  11886
+Sabado    5340   8532  13719
+Domingo   2843   4469   6288
 ```
 
 ## Fase 2: Processamento e Insights
 
 ### 10 informacoes estrategicas
 
-1. **Dia com maior media de vendas**: Sexta (93.0 jogos) - Sexta apresenta o melhor desempenho medio de vendas no mes analisado. Acao sugerida: Recomenda-se concentrar campanhas de destaque e bundles em Sexta.
-2. **Relacao entre o melhor e o pior dia**: 3.91x - Sexta vende significativamente mais do que Domingo, evidenciando uma operacao com picos bem definidos. Acao sugerida: Domingo deve ser tratado como janela prioritaria para acoes de reativacao e ofertas de entrada.
-3. **Peso de sexta e sabado nas vendas do mes**: 44.0% - O fim da semana concentra uma parcela relevante da demanda da SteamLoja. Acao sugerida: A vitrine principal e o investimento promocional devem ser mais fortes nessa janela.
-4. **Total vendido e media diaria**: 1,513 jogos | media 48.81 - Esse numero define a escala da operacao analisada e serve de referencia para metas e comparacoes futuras. Acao sugerida: A media diaria deve ser adotada como linha de base para avaliar o desempenho das proximas campanhas.
-5. **Genero com maior interesse do publico**: Action (44.0%) - Esse genero aparece como preferencia dominante no perfil semanal de clientes. Acao sugerida: A comunicacao e a curadoria comercial devem dar maior destaque aos jogos de Action.
-6. **Participacao conjunta dos generos mais fortes**: 87.0% - Os tres generos lideres concentram a maior parte do interesse comercial observado na semana. Acao sugerida: Catalogo, bundles e anuncios devem priorizar os generos com maior tracao.
-7. **Turno com maior volume de acessos**: Noite (1447 acessos) - O horario noturno concentra mais visitas e tende a reunir maior potencial de conversao. Acao sugerida: As principais atualizacoes de vitrine e comunicacao devem ser programadas para a noite.
-8. **Dia e turno de maior trafego**: Sabado / Noite - Essa e a janela de maior exposicao da SteamLoja na semana analisada. Acao sugerida: Esse pico deve receber lancamentos, bundles premium e o principal destaque de vitrine.
-9. **Janela de baixa demanda para reativacao**: Domingo / Manha - Esse e o ponto mais fraco de acesso da semana e exige intervencao para reduzir o vale operacional. Acao sugerida: Vale testar cupom, oferta leve ou bundle de entrada nesse horario.
-10. **Melhor combinacao comercial do recorte**: Sexta + Action + Noite - A combinacao reune o melhor dia de venda, o genero de maior interesse e o turno de maior trafego. Acao sugerida: A campanha principal da SteamLoja deve ser organizada em Sexta, no turno da noite, com foco em Action.
+1. **Dia com maior media de vendas**: Sabado (11,409 jogos) - Sabado concentra a media mais alta de unidades vendidas no mes analisado. Acao sugerida: A janela de Sabado deve receber o principal destaque promocional da SteamLoja.
+2. **Relacao entre o melhor e o pior dia**: 2.73x - A diferenca entre Sabado e Domingo confirma uma operacao com picos claros de demanda. Acao sugerida: Domingo deve ser tratado como prioridade para campanhas de reativacao e oferta de entrada.
+3. **Peso de sexta e sabado nas vendas do mes**: 41.9% - O fechamento da semana concentra parte relevante da conversao total da loja. Acao sugerida: Vitrine, bundles e verba promocional precisam estar mais fortes nesse intervalo.
+4. **Total vendido e media diaria**: 203,002 jogos | media 6,548 - Esse volume define a escala da operacao academica e cria uma base comparavel para ciclos futuros. Acao sugerida: A media diaria deve ser usada como referencia para metas e avaliacao de campanhas.
+5. **Genero com maior interesse do publico**: Action (26.6%) - Esse genero lidera o interesse observado no comportamento semanal dos clientes. Acao sugerida: A curadoria comercial e a comunicacao principal devem priorizar jogos de Action.
+6. **Participacao conjunta dos generos mais fortes**: 62.9% - Os tres generos lideres concentram a maior parte do interesse potencial de compra. Acao sugerida: Bundles, colecoes e campanhas tematicas devem partir dos generos mais fortes.
+7. **Turno com maior volume de acessos**: Noite (8,943 acessos) - O fluxo de visitas fica mais intenso nesse turno e amplia o potencial de conversao. Acao sugerida: As atualizacoes centrais de vitrine devem ser publicadas na noite.
+8. **Dia e turno de maior trafego**: Sabado / Noite - Essa e a janela de maior exposicao da SteamLoja na semana observada. Acao sugerida: Lancamentos, ofertas premium e banners principais devem estrear nesse pico.
+9. **Janela de baixa demanda para reativacao**: Domingo / Manha - Esse ponto concentra o menor fluxo de acesso e representa o principal vale operacional. Acao sugerida: Cupom leve, bundle de entrada ou conteudo editorial devem ser testados nesse horario.
+10. **Melhor combinacao comercial do recorte**: Sabado + Action + Noite - A combinacao reune o melhor dia de vendas, o genero dominante e o turno de maior trafego. Acao sugerida: A campanha principal deve ser organizada em Sabado, com foco em Action, no turno da noite.
 
 ### Ancoras de mercado Steam
 
@@ -87,10 +91,10 @@ Indicador composto: combina base estimada de owners, aprovacao do publico, engaj
 
 ### Resumo executivo
 
-A SteamLoja apresenta seu melhor desempenho comercial em Sexta, maior interesse do publico em Action e pico de visitas no turno da noite. O plano proposto busca reduzir o vale de Domingo / Manha sem comprometer a janela mais forte de conversao. Como referencia externa, o mercado Steam mostra diferenca de $37.50 entre AAA e Indie, com 16.8% de jogos gratuitos entre os titulos mais populares e 18.3% de suporte Linux nesse grupo.
+A SteamLoja apresenta seu melhor desempenho comercial em Sabado, maior interesse do publico em Action e pico de visitas no turno da noite. O plano proposto busca reduzir o vale de Domingo / Manha sem comprometer a janela mais forte de conversao. Como referencia externa, o mercado Steam mostra diferenca de $37.50 entre AAA e Indie, com 16.8% de jogos gratuitos entre os titulos mais populares e 18.3% de suporte Linux nesse grupo.
 
 ### Cronograma de 3 meses
-- Fazer isso: Reforcar a vitrine principal em Sexta, com foco na combinacao Sexta + Action + Noite. Por causa disso: Essa e a janela de maior demanda e concentracao de interesse do recorte analisado. Impacto esperado: A medida tende a elevar a conversao sem aumentar significativamente a complexidade operacional.
+- Fazer isso: Reforcar a vitrine principal em Sabado, com foco na combinacao Sabado + Action + Noite. Por causa disso: Essa e a janela de maior demanda e concentracao de interesse do recorte analisado. Impacto esperado: A medida tende a elevar a conversao sem aumentar significativamente a complexidade operacional.
 - Fazer isso: Criar uma campanha de reativacao para Domingo / Manha. Por causa disso: Esse e o principal vale semanal de acesso e precisa ser tratado com prioridade. Impacto esperado: A acao reduz ociosidade e melhora a distribuicao das vendas ao longo da semana.
 - Fazer isso: Organizar bundles simples por genero lider e ticket de entrada. Por causa disso: O publico demonstrou preferencia clara por poucos generos centrais. Impacto esperado: Isso tende a acelerar a decisao de compra e simplificar a comunicacao da loja.
 
@@ -127,11 +131,11 @@ A SteamLoja apresenta seu melhor desempenho comercial em Sexta, maior interesse 
 
 ### 3 acoes estrategicas principais
 - **Campanhas de reativacao na janela fraca**: Ativar bundles leves e cupons em Domingo / Manha. Esse e o ponto mais fraco da semana em acesso e potencial de venda. A tendencia e reduzir o vale operacional e gerar receita incremental.
-- **Vitrine principal no melhor combo comercial**: Concentrar a campanha principal em Sexta + Action + Noite. Essa combinacao une o melhor dia, o genero dominante e o turno de maior trafego. A expectativa e elevar a conversao nas janelas de maior retorno.
+- **Vitrine principal no melhor combo comercial**: Concentrar a campanha principal em Sabado + Action + Noite. Essa combinacao une o melhor dia, o genero dominante e o turno de maior trafego. A expectativa e elevar a conversao nas janelas de maior retorno.
 - **Curadoria alinhada ao ecossistema Valve**: Ampliar produtos e comunicacao ligados a Linux, SteamOS e Steam Deck. A Valve migrou de tentativas isoladas para um ecossistema integrado e hoje colhe resultado com o Steam Deck. Isso torna a SteamLoja mais atual, coerente e mais solida para a defesa academica.
 
 ### Conexao com o mercado
-O plano posiciona a SteamLoja como uma empresa ficticia coerente com o mercado real. Ele aproveita a logica promocional da Steam, observa a forca do free-to-play, reconhece a distancia entre AAA e Indie e usa suporte Linux como sinal de proximidade com a estrategia de SteamOS e Steam Deck. O faturamento observado no mes-base foi de R$161,205, o que reforca a necessidade de proteger os dias fortes e recuperar os dias fracos.
+O plano posiciona a SteamLoja como uma empresa ficticia coerente com o mercado real. Ele aproveita a logica promocional da Steam, observa a forca do free-to-play, reconhece a distancia entre AAA e Indie e usa suporte Linux como sinal de proximidade com a estrategia de SteamOS e Steam Deck. O faturamento observado no mes-base foi de R$22,599,727, o que reforca a necessidade de proteger os dias fortes e recuperar os dias fracos.
 
 ## Aderencia as decisoes reais da Steam/Valve
 

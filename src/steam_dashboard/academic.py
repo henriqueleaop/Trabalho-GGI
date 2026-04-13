@@ -21,25 +21,141 @@ class AcademicSources:
     sales: pd.DataFrame
     customer_profile: pd.DataFrame
     store_access: pd.DataFrame
+    raw_sales: pd.DataFrame
+    raw_customer_profile: pd.DataFrame
+    raw_store_access: pd.DataFrame
+
+
+def _to_weekday_categorical(frame: pd.DataFrame, column: str = "weekday") -> pd.DataFrame:
+    frame[column] = pd.Categorical(frame[column], categories=WEEKDAY_ORDER, ordered=True)
+    return frame
+
+
+def _dominant_daily_campaign(raw_sales: pd.DataFrame) -> pd.DataFrame:
+    dominant = (
+        raw_sales.groupby(["date", "campaign_type"], observed=False)["gross_revenue_brl"]
+        .sum()
+        .reset_index()
+        .sort_values(["date", "gross_revenue_brl", "campaign_type"], ascending=[True, False, True])
+        .drop_duplicates(subset=["date"])
+        .rename(columns={"campaign_type": "campaign_type"})
+    )
+    return dominant[["date", "campaign_type"]]
+
+
+def aggregate_sales(raw_sales: pd.DataFrame) -> pd.DataFrame:
+    sales = (
+        raw_sales.groupby("date", observed=False)
+        .agg(
+            weekday=("weekday", "first"),
+            units_sold=("units", "sum"),
+            revenue_brl=("gross_revenue_brl", "sum"),
+            orders=("order_id", "nunique"),
+            average_ticket_brl=("gross_revenue_brl", "mean"),
+        )
+        .reset_index()
+    )
+    sales = sales.merge(_dominant_daily_campaign(raw_sales), on="date", how="left")
+    sales = _to_weekday_categorical(sales).sort_values("date").reset_index(drop=True)
+    return sales
+
+
+def aggregate_customer_profile(raw_customer_profile: pd.DataFrame) -> pd.DataFrame:
+    grouped = (
+        raw_customer_profile.groupby(["weekday", "preferred_genre"], observed=False)
+        .size()
+        .reset_index(name="customer_count")
+        .rename(columns={"preferred_genre": "genre"})
+    )
+    grouped["customer_share_pct"] = (
+        grouped["customer_count"]
+        / grouped.groupby("weekday", observed=False)["customer_count"].transform("sum")
+        * 100
+    ).round(2)
+    grouped = _to_weekday_categorical(grouped).sort_values(["weekday", "customer_count"], ascending=[True, False])
+    return grouped.reset_index(drop=True)
+
+
+def aggregate_store_access(raw_store_access: pd.DataFrame) -> pd.DataFrame:
+    grouped = (
+        raw_store_access.groupby(["weekday", "shift"], observed=False)
+        .size()
+        .reset_index(name="visits")
+    )
+    grouped = _to_weekday_categorical(grouped)
+    grouped["shift"] = pd.Categorical(grouped["shift"], categories=SHIFT_ORDER, ordered=True)
+    grouped = grouped.sort_values(["weekday", "shift"]).reset_index(drop=True)
+    return grouped
 
 
 def load_academic_sources() -> AcademicSources:
-    sales = pd.read_csv(DEFAULT_ACADEMIC_DAILY_SALES, parse_dates=["date"])
-    customer_profile = pd.read_csv(DEFAULT_ACADEMIC_CUSTOMER_PROFILE)
-    store_access = pd.read_csv(DEFAULT_ACADEMIC_STORE_ACCESS)
+    raw_sales = pd.read_csv(
+        DEFAULT_ACADEMIC_DAILY_SALES,
+        parse_dates=["order_ts", "date"],
+        dtype={
+            "order_id": "string",
+            "weekday": "string",
+            "country": "string",
+            "region": "string",
+            "channel": "string",
+            "campaign_type": "string",
+            "genre": "string",
+            "market_segment": "string",
+            "product_type": "string",
+            "is_bundle": "boolean",
+            "is_repeat_customer": "boolean",
+        },
+    )
+    raw_customer_profile = pd.read_csv(
+        DEFAULT_ACADEMIC_CUSTOMER_PROFILE,
+        parse_dates=["event_ts", "date"],
+        dtype={
+            "profile_id": "string",
+            "weekday": "string",
+            "country": "string",
+            "platform": "string",
+            "acquisition_channel": "string",
+            "customer_type": "string",
+            "preferred_genre": "string",
+            "wishlist_add": "boolean",
+            "cart_add": "boolean",
+        },
+    )
+    raw_store_access = pd.read_csv(
+        DEFAULT_ACADEMIC_STORE_ACCESS,
+        parse_dates=["visit_ts", "date"],
+        dtype={
+            "session_id": "string",
+            "weekday": "string",
+            "shift": "string",
+            "country": "string",
+            "device_type": "string",
+            "traffic_source": "string",
+            "landing_surface": "string",
+            "wishlist_action": "boolean",
+            "cart_action": "boolean",
+        },
+    )
 
-    sales["weekday"] = pd.Categorical(sales["weekday"], categories=WEEKDAY_ORDER, ordered=True)
-    customer_profile["weekday"] = pd.Categorical(customer_profile["weekday"], categories=WEEKDAY_ORDER, ordered=True)
-    store_access["weekday"] = pd.Categorical(store_access["weekday"], categories=WEEKDAY_ORDER, ordered=True)
-    store_access["shift"] = pd.Categorical(store_access["shift"], categories=SHIFT_ORDER, ordered=True)
+    raw_sales = _to_weekday_categorical(raw_sales)
+    raw_customer_profile = _to_weekday_categorical(raw_customer_profile)
+    raw_store_access = _to_weekday_categorical(raw_store_access)
+    raw_store_access["shift"] = pd.Categorical(raw_store_access["shift"], categories=SHIFT_ORDER, ordered=True)
 
-    return AcademicSources(sales=sales, customer_profile=customer_profile, store_access=store_access)
+    return AcademicSources(
+        sales=aggregate_sales(raw_sales),
+        customer_profile=aggregate_customer_profile(raw_customer_profile),
+        store_access=aggregate_store_access(raw_store_access),
+        raw_sales=raw_sales,
+        raw_customer_profile=raw_customer_profile,
+        raw_store_access=raw_store_access,
+    )
 
 
 def build_sales_calendar_table(sales_df: pd.DataFrame) -> pd.DataFrame:
     ordered = sales_df.sort_values("date").copy()
     ordered["week_index"] = ((ordered["date"].dt.day - 1) // 7) + 1
-    ordered["label"] = ordered["date"].dt.day.astype(str).radd("Dia ") + ": " + ordered["units_sold"].astype(int).astype(str)
+    ordered["label"] = ordered["date"].dt.day.astype(str).radd("Dia ") + ": " + ordered["units_sold"].astype(int).map("{:,}".format)
     calendar = ordered.pivot(index="week_index", columns="weekday", values="label").reindex(columns=WEEKDAY_ORDER)
     calendar.index = [f"Semana {value}" for value in calendar.index]
     return calendar.fillna("-")
@@ -80,72 +196,72 @@ def build_academic_insights(sales_df: pd.DataFrame, customer_df: pd.DataFrame, a
         {
             "group": "Vendas",
             "title": "Dia com maior media de vendas",
-            "value": f"{best_day} ({best_day_value:.1f} jogos)",
-            "why": f"{best_day} apresenta o melhor desempenho medio de vendas no mes analisado.",
-            "action": f"Recomenda-se concentrar campanhas de destaque e bundles em {best_day}.",
+            "value": f"{best_day} ({best_day_value:,.0f} jogos)",
+            "why": f"{best_day} concentra a media mais alta de unidades vendidas no mes analisado.",
+            "action": f"A janela de {best_day} deve receber o principal destaque promocional da SteamLoja.",
         },
         {
             "group": "Vendas",
             "title": "Relacao entre o melhor e o pior dia",
             "value": f"{best_day_value / worst_day_value:.2f}x",
-            "why": f"{best_day} vende significativamente mais do que {worst_day}, evidenciando uma operacao com picos bem definidos.",
-            "action": f"{worst_day} deve ser tratado como janela prioritaria para acoes de reativacao e ofertas de entrada.",
+            "why": f"A diferenca entre {best_day} e {worst_day} confirma uma operacao com picos claros de demanda.",
+            "action": f"{worst_day} deve ser tratado como prioridade para campanhas de reativacao e oferta de entrada.",
         },
         {
             "group": "Vendas",
             "title": "Peso de sexta e sabado nas vendas do mes",
             "value": f"{weekend_share:.1f}%",
-            "why": "O fim da semana concentra uma parcela relevante da demanda da SteamLoja.",
-            "action": "A vitrine principal e o investimento promocional devem ser mais fortes nessa janela.",
+            "why": "O fechamento da semana concentra parte relevante da conversao total da loja.",
+            "action": "Vitrine, bundles e verba promocional precisam estar mais fortes nesse intervalo.",
         },
         {
             "group": "Vendas",
             "title": "Total vendido e media diaria",
-            "value": f"{total_units:,} jogos | media {daily_average:.2f}",
-            "why": "Esse numero define a escala da operacao analisada e serve de referencia para metas e comparacoes futuras.",
-            "action": "A media diaria deve ser adotada como linha de base para avaliar o desempenho das proximas campanhas.",
+            "value": f"{total_units:,} jogos | media {daily_average:,.0f}",
+            "why": "Esse volume define a escala da operacao academica e cria uma base comparavel para ciclos futuros.",
+            "action": "A media diaria deve ser usada como referencia para metas e avaliacao de campanhas.",
         },
         {
             "group": "Clientes",
             "title": "Genero com maior interesse do publico",
             "value": f"{top_genre} ({top_genre_value:.1f}%)",
-            "why": "Esse genero aparece como preferencia dominante no perfil semanal de clientes.",
-            "action": f"A comunicacao e a curadoria comercial devem dar maior destaque aos jogos de {top_genre}.",
+            "why": "Esse genero lidera o interesse observado no comportamento semanal dos clientes.",
+            "action": f"A curadoria comercial e a comunicacao principal devem priorizar jogos de {top_genre}.",
         },
         {
             "group": "Clientes",
             "title": "Participacao conjunta dos generos mais fortes",
             "value": f"{top_three_share:.1f}%",
-            "why": "Os tres generos lideres concentram a maior parte do interesse comercial observado na semana.",
-            "action": "Catalogo, bundles e anuncios devem priorizar os generos com maior tracao.",
+            "why": "Os tres generos lideres concentram a maior parte do interesse potencial de compra.",
+            "action": "Bundles, colecoes e campanhas tematicas devem partir dos generos mais fortes.",
         },
         {
             "group": "Acessos e comportamento",
             "title": "Turno com maior volume de acessos",
-            "value": f"{top_shift} ({top_shift_value:.0f} acessos)",
-            "why": "O horario noturno concentra mais visitas e tende a reunir maior potencial de conversao.",
-            "action": f"As principais atualizacoes de vitrine e comunicacao devem ser programadas para a {top_shift.lower()}.",
+            "value": f"{top_shift} ({top_shift_value:,.0f} acessos)",
+            "why": "O fluxo de visitas fica mais intenso nesse turno e amplia o potencial de conversao.",
+            "action": f"As atualizacoes centrais de vitrine devem ser publicadas na {top_shift.lower()}.",
         },
         {
             "group": "Acessos e comportamento",
             "title": "Dia e turno de maior trafego",
             "value": f"{top_window['weekday']} / {top_window['shift']}",
-            "why": "Essa e a janela de maior exposicao da SteamLoja na semana analisada.",
-            "action": "Esse pico deve receber lancamentos, bundles premium e o principal destaque de vitrine.",
+            "why": "Essa e a janela de maior exposicao da SteamLoja na semana observada.",
+            "action": "Lancamentos, ofertas premium e banners principais devem estrear nesse pico.",
         },
         {
             "group": "Acessos e comportamento",
             "title": "Janela de baixa demanda para reativacao",
             "value": f"{low_window['weekday']} / {low_window['shift']}",
-            "why": "Esse e o ponto mais fraco de acesso da semana e exige intervencao para reduzir o vale operacional.",
-            "action": "Vale testar cupom, oferta leve ou bundle de entrada nesse horario.",
+            "why": "Esse ponto concentra o menor fluxo de acesso e representa o principal vale operacional.",
+            "action": "Cupom leve, bundle de entrada ou conteudo editorial devem ser testados nesse horario.",
         },
         {
             "group": "Acessos e comportamento",
             "title": "Melhor combinacao comercial do recorte",
             "value": f"{best_conversion_day} + {top_genre} + {top_shift}",
-            "why": "A combinacao reune o melhor dia de venda, o genero de maior interesse e o turno de maior trafego.",
-            "action": f"A campanha principal da SteamLoja deve ser organizada em {best_conversion_day}, no turno da {top_shift.lower()}, com foco em {top_genre}.",
+            "why": "A combinacao reune o melhor dia de vendas, o genero dominante e o turno de maior trafego.",
+            "action": f"A campanha principal deve ser organizada em {best_conversion_day}, com foco em {top_genre}, no turno da {top_shift.lower()}.",
         },
     ]
 
@@ -314,6 +430,14 @@ def build_strategy_payload(
     }
 
 
+def build_methodology_note(sources: AcademicSources) -> str:
+    return (
+        "A camada academica foi modelada em grao detalhado e depois consolidada para apresentacao. "
+        f"O recorte inclui {len(sources.raw_sales):,} pedidos, {len(sources.raw_customer_profile):,} sinais de perfil de cliente "
+        f"e {len(sources.raw_store_access):,} sessoes de acesso, distribuidos por pais, canal, campanha, dispositivo e genero."
+    )
+
+
 def build_academic_payload(games_df: pd.DataFrame) -> dict[str, object]:
     sources = load_academic_sources()
     insights = build_academic_insights(sources.sales, sources.customer_profile, sources.store_access)
@@ -347,4 +471,5 @@ def build_academic_payload(games_df: pd.DataFrame) -> dict[str, object]:
         "insights": insights,
         "anchors": anchors,
         "strategy": strategy,
+        "methodology_note": build_methodology_note(sources),
     }

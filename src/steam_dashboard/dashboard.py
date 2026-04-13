@@ -9,6 +9,7 @@ from .academic import (
     SHIFT_ORDER,
     SOURCE_OPTIONS,
     build_academic_insights,
+    build_methodology_note,
     build_market_anchors,
     build_sales_calendar_table,
     build_strategy_payload,
@@ -365,13 +366,14 @@ def load_games_data() -> pd.DataFrame:
 
 
 @st.cache_data(show_spinner=False)
-def load_store_sources() -> dict[str, pd.DataFrame]:
+def load_store_sources() -> dict[str, object]:
     sources = load_academic_sources()
     return {
         "sales": sources.sales,
         "customer_profile": sources.customer_profile,
         "store_access": sources.store_access,
         "sales_calendar": build_sales_calendar_table(sources.sales),
+        "methodology_note": build_methodology_note(sources),
     }
 
 
@@ -565,10 +567,11 @@ def render_header(sales_df: pd.DataFrame, games_df: pd.DataFrame, source_mode: s
     )
 
 
-def render_phase_one(store_sources: dict[str, pd.DataFrame], source_mode: str) -> None:
+def render_phase_one(store_sources: dict[str, object], source_mode: str) -> None:
     sales_df = store_sources["sales"]
     customer_df = store_sources["customer_profile"]
     access_df = store_sources["store_access"]
+    methodology_note = store_sources.get("methodology_note")
 
     render_signal_card(
         "Fase 1: leitura operacional da SteamLoja",
@@ -588,6 +591,8 @@ def render_phase_one(store_sources: dict[str, pd.DataFrame], source_mode: str) -
             ("Turno com mais acessos", access_df.groupby("shift", observed=False)["visits"].mean().sort_values(ascending=False).index[0]),
         ]
     )
+    if methodology_note:
+        render_surface_card("Metodologia da base ficticia", methodology_note)
 
     st.markdown("<div class='phase-section'></div>", unsafe_allow_html=True)
     left, right = st.columns([1.1, 1.2])
@@ -702,7 +707,7 @@ def render_market_anchor_cards(anchors: dict[str, object]) -> None:
     )
 
 
-def render_phase_two(store_sources: dict[str, pd.DataFrame], filtered_games: pd.DataFrame, source_mode: str) -> tuple[list[dict[str, str]], dict[str, object], dict[str, object]]:
+def render_phase_two(store_sources: dict[str, object], filtered_games: pd.DataFrame, source_mode: str) -> tuple[list[dict[str, str]], dict[str, object], dict[str, object]]:
     insights = build_academic_insights(store_sources["sales"], store_sources["customer_profile"], store_sources["store_access"])
     anchors = build_market_anchors(filtered_games)
     strategy = build_strategy_payload(insights, anchors, store_sources["sales"], store_sources["customer_profile"], store_sources["store_access"])
@@ -790,7 +795,7 @@ def render_timeline_column(title: str, items: list[dict[str, str]]) -> None:
     )
 
 
-def render_phase_three(store_sources: dict[str, pd.DataFrame], strategy: dict[str, object], source_mode: str) -> None:
+def render_phase_three(store_sources: dict[str, object], strategy: dict[str, object], source_mode: str) -> None:
     render_signal_card(
         "Fase 3: planejamento estrategico",
         "Nesta fase, os sinais da operacao e do mercado sao convertidos em um plano de acao com horizonte de 3 meses, 6 meses e 1 ano, incluindo prioridades, riscos e conexao com o setor.",

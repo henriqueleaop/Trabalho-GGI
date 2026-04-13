@@ -7,6 +7,7 @@ import pandas as pd
 from .academic import (
     build_academic_insights,
     build_market_anchors,
+    build_methodology_note,
     build_sales_calendar_table,
     build_strategy_payload,
     load_academic_sources,
@@ -30,6 +31,7 @@ def build_report_context(games_df: pd.DataFrame) -> dict[str, object]:
         "sales_calendar": sales_calendar,
         "customer_profile_table": customer_profile,
         "store_access_table": store_access,
+        "methodology_note": build_methodology_note(sources),
     }
 
 
@@ -40,6 +42,7 @@ def build_markdown_report(context: dict[str, object]) -> str:
     sales_calendar = context["sales_calendar"]
     customer_profile = context["customer_profile_table"]
     store_access = context["store_access_table"]
+    methodology_note = context["methodology_note"]
 
     sales_calendar_md = "```text\n" + sales_calendar.to_string() + "\n```"
     customer_md = "```text\n" + customer_profile.to_string() + "\n```"
@@ -66,6 +69,10 @@ Este relatorio apresenta a SteamLoja como empresa ficticia inspirada no ecossist
 ## Fase 1: Coleta e Organizacao
 
 Nesta etapa a SteamLoja apenas observa o funcionamento da operacao.
+
+### Nota de metodologia
+
+{methodology_note}
 
 ### Fonte 1: Vendas diarias do mes
 
@@ -171,6 +178,7 @@ def build_pdf_report(context: dict[str, object]) -> bytes:
     sales_calendar = context["sales_calendar"]
     customer_profile = context["customer_profile_table"]
     store_access = context["store_access_table"]
+    methodology_note = context["methodology_note"]
 
     styles = getSampleStyleSheet()
     styles.add(
@@ -229,6 +237,7 @@ def build_pdf_report(context: dict[str, object]) -> bytes:
         ),
         Spacer(1, 0.2 * cm),
         Paragraph("Fase 1: Coleta e Organizacao", styles["SectionTitle"]),
+        Paragraph(str(methodology_note), styles["BodyCopy"]),
         Paragraph("Fonte 1: Vendas diarias do mes", styles["Heading4"]),
     ]
 

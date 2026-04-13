@@ -24,6 +24,7 @@ A solução combina duas camadas de dados:
 
 - `Dados reais`: base de jogos Steam já processada, usada como evidência de mercado.
 - `Dados fictícios, mas defensáveis`: base acadêmica da SteamLoja com vendas diárias, perfil de clientes por gênero e acessos por turno.
+- `Dados fictícios, mas defensáveis`: base acadêmica da SteamLoja modelada em grão detalhado e consolidada no app para apresentação.
 
 Com isso, o projeto não depende só de simulação. Ele usa uma narrativa acadêmica clara, mas se ancora em sinais que realmente fazem sentido no ecossistema Steam e na estratégia histórica da Valve.
 
@@ -61,17 +62,23 @@ Esses dados sustentam análises de mercado como:
 
 ### Dados fictícios
 
-Os dados fictícios do projeto representam a operação da `SteamLoja`:
+Os dados fictícios do projeto representam a operação da `SteamLoja`, mas nao foram preenchidos manualmente em tabelas pequenas. Eles sao simulados com logica operacional de escala e depois consolidados no dashboard:
 
 - `daily_sales_month.csv`
-  - vendas diárias no mês
-  - dia da semana
-  - faturamento
+  - pedidos detalhados do mês-base
+  - data e horario do pedido
+  - pais, regiao e canal
   - tipo de campanha
+  - genero, segmento e tipo de produto
+  - unidades, preco, desconto e faturamento
 - `customer_genre_profile_week.csv`
-  - perfil semanal de clientes por gênero
+  - sinais detalhados de perfil de cliente em uma semana
+  - pais, plataforma, canal de aquisicao e tipo de cliente
+  - genero preferido, wishlist, carrinho e intencao de compra
 - `store_access_shift_week.csv`
-  - acessos da loja por turno ao longo da semana
+  - sessoes detalhadas de acesso ao longo da semana
+  - dia, turno, pais, dispositivo, origem de trafego e superficie de entrada
+  - minutos de sessao, paginas vistas e acoes de wishlist/carrinho
 
 Esses dados são fictícios, mas foram construídos para serem:
 
@@ -79,6 +86,15 @@ Esses dados são fictícios, mas foram construídos para serem:
 - coerentes com o enunciado do trabalho
 - alinhados a padrões plausíveis do mercado Steam
 - defensáveis em apresentação
+
+Na prática, isso significa:
+
+- milhares de pedidos por dia, em vez de dezenas de vendas artificiais
+- picos mais fortes em `Sexta` e `Sabado`
+- maior intensidade de acesso no turno da `Noite`
+- predominio de `Action`, com variacao real entre dias e canais
+- distribuicao internacional com peso maior para `Brasil`, `Estados Unidos` e Europa
+- campanhas, bundles, dispositivos e canais com impacto real no resultado agregado
 
 ## Por que a estratégia híbrida foi escolhida
 
@@ -203,9 +219,10 @@ O trabalho foi pensado para dialogar com tendências e decisões que fazem senti
 O projeto foi implementado em Python com a seguinte lógica:
 
 - leitura e preparação da base real de jogos Steam
-- criação de uma base acadêmica própria para a SteamLoja
+- geracao deterministica de uma base academica propria para a SteamLoja
 - consolidação das duas camadas no dashboard
 - geração de relatório acadêmico em Markdown
+- exportacao do relatorio em PDF
 - validação por testes automatizados
 
 Tecnologias usadas:
@@ -226,17 +243,21 @@ Arquivos principais:
 - [src/steam_dashboard/dashboard.py](/D:/_Projetos/Faculdade/Governanca/src/steam_dashboard/dashboard.py)
   - interface principal, tema visual, sidebar e renderização das três fases
 - [src/steam_dashboard/academic.py](/D:/_Projetos/Faculdade/Governanca/src/steam_dashboard/academic.py)
-  - carga das bases acadêmicas, geração dos 10 insights, âncoras de mercado e plano estratégico
+  - carga das bases acadêmicas detalhadas, agregação para o dashboard, geração dos 10 insights, âncoras de mercado e plano estratégico
 - [src/steam_dashboard/transform.py](/D:/_Projetos/Faculdade/Governanca/src/steam_dashboard/transform.py)
   - preparação da base real de jogos Steam
 - [src/steam_dashboard/insights.py](/D:/_Projetos/Faculdade/Governanca/src/steam_dashboard/insights.py)
   - lógica de insights e apoio analítico herdada da camada de mercado
 - [src/steam_dashboard/paths.py](/D:/_Projetos/Faculdade/Governanca/src/steam_dashboard/paths.py)
   - caminhos padrão do projeto
+- [src/steam_dashboard/reporting.py](/D:/_Projetos/Faculdade/Governanca/src/steam_dashboard/reporting.py)
+  - montagem do contexto do relatório, saída em Markdown e exportação em PDF
 - [scripts/prepare_dataset.py](/D:/_Projetos/Faculdade/Governanca/scripts/prepare_dataset.py)
   - prepara a base real
+- [scripts/generate_academic_data.py](/D:/_Projetos/Faculdade/Governanca/scripts/generate_academic_data.py)
+  - gera as bases fictícias detalhadas da SteamLoja com seed fixa
 - [scripts/generate_report.py](/D:/_Projetos/Faculdade/Governanca/scripts/generate_report.py)
-  - gera o relatório final em Markdown
+  - gera o relatório final em Markdown e PDF
 
 Diretórios de dados:
 
@@ -265,6 +286,7 @@ As dependências estão em [requirements.txt](/D:/_Projetos/Faculdade/Governanca
 - `plotly`
 - `pyarrow`
 - `requests`
+- `reportlab`
 - `streamlit`
 
 ## Setup local completo
@@ -299,17 +321,30 @@ Saídas:
 - [games_processed.parquet](/D:/_Projetos/Faculdade/Governanca/data/processed/games_processed.parquet)
 - [monitor_candidates.csv](/D:/_Projetos/Faculdade/Governanca/data/processed/monitor_candidates.csv)
 
-### 2. Gerar o relatório acadêmico
+### 2. Gerar ou regenerar a base acadêmica da SteamLoja
 
 ```powershell
-.\.venv\Scripts\python scripts/generate_report.py
+.\.venv\Scripts\python scripts/generate_academic_data.py
+```
+
+Saídas:
+
+- [daily_sales_month.csv](/D:/_Projetos/Faculdade/Governanca/data/academic/daily_sales_month.csv)
+- [customer_genre_profile_week.csv](/D:/_Projetos/Faculdade/Governanca/data/academic/customer_genre_profile_week.csv)
+- [store_access_shift_week.csv](/D:/_Projetos/Faculdade/Governanca/data/academic/store_access_shift_week.csv)
+
+### 3. Gerar o relatório acadêmico
+
+```powershell
+.\.venv\Scripts\python scripts/generate_report.py --with-pdf
 ```
 
 Saída:
 
 - [steam_decision_report.md](/D:/_Projetos/Faculdade/Governanca/output/steam_decision_report.md)
+- [steamloja_academica.pdf](/D:/_Projetos/Faculdade/Governanca/output/pdf/steamloja_academica.pdf)
 
-### 3. Abrir o dashboard
+### 4. Abrir o dashboard
 
 ```powershell
 .\.venv\Scripts\streamlit run app.py
@@ -339,7 +374,8 @@ Se a porta `8501` estiver ocupada:
 cd D:\_Projetos\Faculdade\Governanca
 .\.venv\Scripts\Activate.ps1
 .\.venv\Scripts\python scripts/prepare_dataset.py --input "D:/Downloads/Copy of games.csv"
-.\.venv\Scripts\python scripts/generate_report.py
+.\.venv\Scripts\python scripts/generate_academic_data.py
+.\.venv\Scripts\python scripts/generate_report.py --with-pdf
 .\.venv\Scripts\streamlit run app.py
 ```
 
@@ -385,11 +421,12 @@ Pergunta principal:
 ## Limitações e observações importantes
 
 - A SteamLoja é uma empresa fictícia.
-- A base acadêmica da loja foi criada para fins de apresentação e defesa.
+- A base acadêmica da loja foi simulada para fins de apresentação e defesa, mas segue regras de distribuição plausíveis para uma operação grande.
 - A base de jogos Steam é real, mas representa uma fotografia de mercado do arquivo utilizado.
 - O projeto não depende de scraping do SteamDB.
 - O CSV bruto da Steam possui inconsistências de schema; por isso a leitura da base real foi implementada de forma posicional.
 - O indicador composto de oportunidade é heurístico e serve para apoio analítico, não para decisão isolada.
+- Os CSVs acadêmicos agora estão em grão detalhado; o dashboard consolida esses eventos para manter a leitura simples nas três fases.
 
 ## Troubleshooting
 
@@ -410,7 +447,8 @@ Confirme se existe a base processada:
 Depois rode novamente:
 
 ```powershell
-.\.venv\Scripts\python scripts/generate_report.py
+.\.venv\Scripts\python scripts/generate_academic_data.py
+.\.venv\Scripts\python scripts/generate_report.py --with-pdf
 ```
 
 ### A porta 8501 está ocupada
