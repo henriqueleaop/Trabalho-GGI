@@ -110,7 +110,7 @@ Nesta etapa a SteamLoja apenas observa o funcionamento da operacao.
 
 {context_md}
 
-## Fase 2: Processamento e Insights
+## Fase 2: Processamento e Informacoes
 
 ### 14 informacoes estrategicas
 
@@ -179,7 +179,7 @@ Nesta etapa a SteamLoja apenas observa o funcionamento da operacao.
 ## Aderencia as decisoes reais da Steam/Valve
 
 - A leitura de Linux e SteamOS aproxima o trabalho da estrategia de plataforma aberta da Valve.
-- O foco em eventos, weekly deals e bundles reflete a forma como a Steam organiza divulgacao e descoberta.
+- O foco em eventos, ofertas recorrentes e combos reflete a forma como a Steam organiza divulgacao e descoberta.
 - A referencia a Steam Machine -> Steam Deck reforca que o ecossistema da Valve amadureceu de tentativa isolada para proposta integrada.
 """
 
@@ -329,7 +329,7 @@ def build_pdf_report(context: dict[str, object]) -> bytes:
     story.extend(
         [
             Spacer(1, 0.15 * cm),
-            Paragraph("Fase 2: Processamento e Insights", styles["SectionTitle"]),
+            Paragraph("Fase 2: Processamento e Informacoes", styles["SectionTitle"]),
         ]
     )
     for index, item in enumerate(insights, start=1):
@@ -406,7 +406,7 @@ def build_pdf_report(context: dict[str, object]) -> bytes:
             Paragraph("Aderencia as decisoes reais da Steam/Valve", styles["Heading4"]),
             Paragraph(
                 "A leitura de Linux e SteamOS aproxima o trabalho da estrategia de plataforma aberta da Valve. "
-                "O foco em eventos, weekly deals e bundles reflete a forma como a Steam organiza divulgacao e descoberta. "
+                "O foco em eventos, ofertas recorrentes e combos reflete a forma como a Steam organiza divulgacao e descoberta. "
                 "A referencia a Steam Machine -> Steam Deck reforca o amadurecimento do ecossistema da Valve.",
                 styles["BodyCopy"],
             ),

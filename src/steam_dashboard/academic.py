@@ -215,7 +215,7 @@ def build_operational_insights(sales_df: pd.DataFrame, customer_df: pd.DataFrame
             "title": "Peso de sexta e sabado nas vendas do mes",
             "value": f"{weekend_share:.1f}%",
             "why": "O fechamento da semana concentra parte relevante da conversao total da loja.",
-            "action": "Vitrine, bundles e verba promocional precisam estar mais fortes nesse intervalo.",
+            "action": "Vitrine, combos promocionais e verba de divulgacao precisam estar mais fortes nesse intervalo.",
             **operational_source,
         },
         {
@@ -239,7 +239,7 @@ def build_operational_insights(sales_df: pd.DataFrame, customer_df: pd.DataFrame
             "title": "Participacao conjunta dos generos mais fortes",
             "value": f"{top_three_share:.1f}%",
             "why": "Os tres generos lideres concentram a maior parte do interesse potencial de compra.",
-            "action": "Bundles, colecoes e campanhas tematicas devem partir dos generos mais fortes.",
+            "action": "Combos, colecoes e campanhas tematicas devem partir dos generos mais fortes.",
             **operational_source,
         },
         {
@@ -263,7 +263,7 @@ def build_operational_insights(sales_df: pd.DataFrame, customer_df: pd.DataFrame
             "title": "Janela de baixa demanda para reativacao",
             "value": f"{low_window['weekday']} / {low_window['shift']}",
             "why": "Esse ponto concentra o menor fluxo de acesso e representa o principal vale operacional.",
-            "action": "Cupom leve, bundle de entrada ou conteudo editorial devem ser testados nesse horario.",
+            "action": "Cupom leve, combo de entrada ou conteudo editorial devem ser testados nesse horario.",
             **operational_source,
         },
         {
@@ -315,8 +315,8 @@ def build_market_anchors(games_df: pd.DataFrame) -> dict[str, object]:
         "linux_share_top": linux_share,
         "opportunities": opportunities,
         "indicator_formula": (
-            "Indicador composto: combina base estimada de owners, aprovacao do publico, engajamento e acessibilidade de preco. "
-            "Ele orienta a leitura comercial do catalogo, mas nao substitui avaliacao qualitativa."
+            "Indicador composto: junta tamanho estimado do publico, aprovacao dos jogadores, engajamento e facilidade de compra pelo preco. "
+            "Ele ajuda a comparar jogos, mas nao substitui uma avaliacao humana do catalogo."
         ),
     }
 
@@ -347,7 +347,7 @@ def build_strategy_payload(
         context_sources.platform_shift["metric"] == "Participacao do SteamOS Holo entre usuarios Linux da Steam", "value"
     ].iloc[0]
     removable_apps = context_sources.windows_friction.loc[
-        context_sources.windows_friction["metric"] == "Apps inbox configuraveis para remocao por politica no Windows 11 25H2", "value"
+        context_sources.windows_friction["metric"] == "Aplicativos preinstalados configuraveis para remocao por politica no Windows 11 25H2", "value"
     ].iloc[0]
     consumer_dram = context_sources.hardware_cost_pressure.loc[
         context_sources.hardware_cost_pressure["metric"] == "Consumer DRAM no 2Q26", "value"
@@ -359,7 +359,7 @@ def build_strategy_payload(
         context_sources.hardware_cost_pressure["metric"] == "NAND Flash no 2Q26", "value"
     ].iloc[0]
     steam_hardware = context_sources.hardware_cost_pressure.loc[
-        context_sources.hardware_cost_pressure["metric"] == "Steam Deck refurbished e Steam Machine listados na loja oficial", "value"
+        context_sources.hardware_cost_pressure["metric"] == "Steam Deck recondicionado e Steam Machine listados na loja oficial", "value"
     ].iloc[0]
 
     return {
@@ -367,7 +367,7 @@ def build_strategy_payload(
             f"A SteamLoja segue com seu pico comercial em {best_day}, interesse dominante em {top_genre} e maior trafego no turno da {top_shift.lower()}. "
             f"A diferenca agora e que o plano de medio e longo prazo passa a se apoiar em sinais externos mais fortes: Linux chegou a {linux_shift} na Steam, "
             f"Windows caiu para {windows_shift}, SteamOS Holo ja representa {steamos_share} do recorte Linux e o Windows 11 25H2 preve remocao de {removable_apps}. "
-            f"No hardware, a pressao de consumer DRAM ({consumer_dram}), DRAM convencional ({conventional_dram}) e NAND ({nand}) se combina com uma entrada oficial mais acessivel ({steam_hardware}) e reforca a importancia de bundles e hardware proprio. "
+            f"No hardware, a pressao de memoria para consumidor ({consumer_dram}), memoria comum ({conventional_dram}) e armazenamento NAND ({nand}) se combina com uma entrada oficial mais acessivel ({steam_hardware}) e reforca a importancia de combos e hardware proprio. "
             f"Como referencia de mercado, AAA e Indie mantem distancia mediana de ${price_diff:,.2f}, com {free_share:.1f}% de jogos gratuitos entre os titulos mais populares e {linux_share:.1f}% de suporte Linux nesse grupo."
         ),
         "three_months": [
@@ -384,7 +384,7 @@ def build_strategy_payload(
                 "supports": "Infos 2 e 9",
             },
             {
-                "do": "Organizar bundles simples por genero lider e ticket de entrada.",
+                "do": "Organizar combos simples com o genero mais procurado e preco de entrada acessivel.",
                 "because": "O publico demonstrou preferencia clara por poucos generos centrais.",
                 "impact": "Isso tende a acelerar a decisao de compra e simplificar a comunicacao da loja.",
                 "supports": "Infos 5 e 6",
@@ -392,19 +392,19 @@ def build_strategy_payload(
         ],
         "six_months": [
             {
-                "do": "Investir na divulgacao do SteamOS com uma frente editorial e comercial chamada SteamOS Ready.",
+                "do": "Investir na divulgacao do SteamOS com uma frente editorial e comercial chamada Pronto para SteamOS.",
                 "because": "A migracao de base para Linux e o peso crescente do SteamOS Holo mostram que o ecossistema da Valve ja tem tracao real fora do Windows.",
                 "impact": "A SteamLoja passa a capturar mais usuarios dentro do ecossistema Steam, com maior recorrencia e menor dependencia de plataformas concorrentes.",
                 "supports": "Infos 11 e 12",
             },
             {
-                "do": "Criar colecoes, filtros e campanhas Steam Deck / Steam Machine / SteamOS Ready dentro da loja.",
+                "do": "Criar colecoes, filtros e campanhas para Steam Deck, Steam Machine e jogos prontos para SteamOS dentro da loja.",
                 "because": "Quando a experiencia Windows exige simplificacao oficial e a busca por plataformas focadas em jogo aumenta, uma curadoria guiada por compatibilidade ganha valor comercial.",
                 "impact": "Isso melhora conversao, reduz duvida de compra e reforca a identidade da SteamLoja como extensao do ecossistema Valve.",
                 "supports": "Infos 12 e 13",
             },
             {
-                "do": "Padronizar a comunicacao da loja em torno de conveniencia, biblioteca unificada e experiencia mais limpa do que o PC gamer tradicional.",
+                "do": "Padronizar a comunicacao da loja em torno de praticidade, biblioteca unificada e experiencia mais limpa do que o PC gamer tradicional.",
                 "because": "O recorte de plataforma mostra evasao relativa do Windows e abre espaco para posicionar SteamOS como ambiente mais focado em jogo.",
                 "impact": "A marca da SteamLoja ganha um discurso mais coerente com a direcao atual da Valve e com a defesa academica.",
                 "supports": "Infos 11, 12 e 13",
@@ -412,20 +412,20 @@ def build_strategy_payload(
         ],
         "one_year": [
             {
-                "do": "Montar bundles de hardware proprio com Steam Deck, futura linha Steam Machine, credito de loja, gift cards e acessorios.",
-                "because": "A alta de memoria e armazenamento pressiona o custo do PC tradicional, enquanto a loja oficial da Steam ja combina entrada acessivel via refurbished com expansao do catalogo de hardware.",
+                "do": "Montar combos de hardware proprio com Steam Deck, futura linha Steam Machine, credito de loja, cartoes-presente e acessorios.",
+                "because": "A alta de memoria e armazenamento pressiona o custo do PC tradicional, enquanto a loja oficial da Steam ja combina entrada acessivel via equipamento recondicionado com expansao da linha de hardware.",
                 "impact": "A SteamLoja passa a vender entrada no ecossistema, e nao apenas software, elevando receita por cliente e fidelizacao.",
                 "supports": "Info 14",
             },
             {
-                "do": "Criar uma politica de acessibilidade para hardware com parcelamento, refurbished e combos de entrada.",
+                "do": "Criar uma politica de acesso ao hardware com parcelamento, equipamentos recondicionados e combos de entrada.",
                 "because": "Acessibilidade de hardware se torna argumento central num mercado em que DRAM e NAND pressionam o preco final do consumidor.",
                 "impact": "A loja amplia alcance sem depender de aumento direto da taxa da plataforma, o que deixa a estrategia mais defensavel.",
                 "supports": "Info 14",
             },
             {
-                "do": "Subsidiar parte do hardware pelo attach rate do ecossistema, e nao por uma assinatura centralizada.",
-                "because": "Os dados observados sustentam melhor a captura por hardware, OS e biblioteca do que uma mudanca abrupta para um modelo tipo Game Pass.",
+                "do": "Subsidiar parte do hardware com o lucro gerado por quem entra e continua comprando no ecossistema, e nao por uma assinatura centralizada.",
+                "because": "Os dados observados sustentam melhor a captura por hardware, sistema e biblioteca do que uma mudanca abrupta para um modelo de assinatura parecido com o Game Pass.",
                 "impact": "A SteamLoja preserva coerencia com a estrategia Valve e evita conflito prematuro entre assinatura, margem e venda unitaria.",
                 "supports": "Info 14 + apoio de pirataria",
             },
@@ -433,59 +433,59 @@ def build_strategy_payload(
         "demands": [
             "Aumentar vendas fora do pico de sexta e sabado.",
             "Transformar o crescimento de Linux e SteamOS em argumentacao comercial real da loja.",
-            "Construir uma frente de hardware proprio acessivel sem depender de aumento de taxa como alavanca principal.",
+            "Construir uma frente de hardware proprio acessivel sem depender de aumento de taxa como principal alavanca.",
         ],
         "tasks": [
             "Revisar semanalmente vendas, genero preferido e acessos por turno.",
-            "Atualizar vitrine e bundles de acordo com o calendario promocional e com a colecao SteamOS Ready.",
+            "Atualizar vitrine e combos de acordo com o calendario promocional e com a colecao Pronto para SteamOS.",
             "Acompanhar mensalmente sinais de plataforma, custo de hardware e monetizacao para ajustar a estrategia.",
         ],
         "priorities": [
             "Alta: ocupar a janela mais forte da semana e corrigir o principal vale operacional.",
-            "Media: transformar SteamOS e compatibilidade com hardware Valve em pilar visivel de curadoria e divulgacao.",
+            "Media: transformar SteamOS e compatibilidade com hardware Valve em pilar visivel de selecao e divulgacao.",
             "Baixa: avaliar assinatura apenas como oportunidade futura, depois da consolidacao do ecossistema.",
         ],
         "risks": [
             "Risco comercial: insistir apenas em promocao de software e perder a onda de captura por ecossistema SteamOS e hardware.",
-            "Risco operacional: comunicar hardware proprio sem politica clara de preco, bundle e reposicao.",
+            "Risco operacional: comunicar hardware proprio sem politica clara de preco, combo comercial e reposicao.",
             "Risco estrategico: tentar forcar assinatura cedo demais e gerar conflito com a logica atual de ecossistema da Valve.",
         ],
         "contingencies": [
             "Manter plano promocional alternativo para dias de baixa resposta.",
-            "Trabalhar hardware com combos de entrada, refurbished e parcelamento antes de discutir expansao agressiva.",
+            "Trabalhar hardware com combos de entrada, equipamentos recondicionados e parcelamento antes de discutir expansao agressiva.",
             "Revisar trimestralmente o discurso de SteamOS e hardware com base em sinais reais de plataforma e custo.",
         ],
         "actions": [
             {
                 "title": "Campanhas de reativacao na janela fraca",
-                "do": f"Ativar bundles leves e cupons em {low_window}.",
+                "do": f"Ativar combos leves e cupons em {low_window}.",
                 "because": "Esse e o ponto mais fraco da semana em acesso e potencial de venda.",
                 "impact": "A tendencia e reduzir o vale operacional e gerar receita incremental.",
                 "supports": "Infos 2 e 9",
             },
             {
                 "title": "Divulgacao estruturada do SteamOS",
-                "do": "Lancar colecoes SteamOS Ready e guias de migracao suave para Steam Deck e Steam Machine.",
+                "do": "Lancar colecoes Pronto para SteamOS e guias simples de migracao para Steam Deck e Steam Machine.",
                 "because": "Linux cresceu na Steam, SteamOS Holo ganhou peso dentro desse recorte e o Windows passou a sinalizar mais atrito de experiencia.",
                 "impact": "A SteamLoja fortalece captura de usuario dentro do ecossistema Valve e melhora a coerencia do plano de medio prazo.",
                 "supports": "Infos 11, 12 e 13",
             },
             {
                 "title": "Hardware proprio com acesso comercial mais inteligente",
-                "do": "Estruturar bundles de Steam Deck e futura Steam Machine com credito de loja, acessorios e opcao de entrada acessivel.",
-                "because": "Memoria e storage ficaram mais caros, e a loja oficial da Steam ja sinaliza uma escada comercial que vai do refurbished ao hardware novo.",
+                "do": "Estruturar combos de Steam Deck e futura Steam Machine com credito de loja, acessorios e opcao de entrada acessivel.",
+                "because": "Memoria e armazenamento ficaram mais caros, e a loja oficial da Steam ja sinaliza uma escada comercial que vai do equipamento recondicionado ao hardware novo.",
                 "impact": "A SteamLoja passa a capturar valor por ecossistema completo, e nao apenas por venda pontual de software.",
                 "supports": "Info 14",
             },
         ],
         "future_opportunities": [
-            "Assinatura tipo Game Pass fica como hipotese futura, nao como eixo principal do plano.",
-            "Ela so deve ser reconsiderada depois que a base de hardware e a colecao SteamOS Ready estiverem mais maduras.",
+            "Uma assinatura parecida com o Game Pass fica como hipotese futura, nao como eixo principal do plano.",
+            "Ela so deve ser reconsiderada depois que a base de hardware e a colecao Pronto para SteamOS estiverem mais maduras.",
         ],
         "market_connection": (
             "O plano posiciona a SteamLoja como uma empresa ficticia coerente com o mercado real. "
             "No curto prazo, ele protege as melhores janelas de conversao da operacao. No medio prazo, transforma a migracao para Linux e o crescimento do SteamOS em argumento comercial concreto. "
-            "No longo prazo, usa a pressao de custo em hardware e a ampliacao do catalogo Steam para defender bundles, acessibilidade e captura por ecossistema. "
+            "No longo prazo, usa a pressao de custo em hardware e a ampliacao do catalogo Steam para defender combos, acessibilidade e captura por ecossistema. "
             f"O faturamento observado no mes-base foi de R${revenue_total:,.0f}, o que reforca a necessidade de ligar operacao, plataforma e hardware em uma mesma narrativa estrategica."
         ),
     }

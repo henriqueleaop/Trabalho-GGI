@@ -675,7 +675,7 @@ def render_phase_one(store_sources: dict[str, object], source_mode: str) -> None
         render_context_box(
             "Fonte 2: perfil de clientes por genero",
             "Mostra quais generos concentram maior interesse do publico ao longo da semana.",
-            "Ajuda a entender o perfil da demanda e a ajustar curadoria, comunicacao e composicao de bundles.",
+            "Ajuda a entender o perfil da demanda e a ajustar curadoria, comunicacao e composicao de combos.",
             "Orienta quais categorias merecem mais destaque comercial e editorial.",
         )
         weekly_profile = customer_df.pivot(index="weekday", columns="genre", values="customer_share_pct").reindex(WEEKDAY_ORDER)
@@ -788,7 +788,7 @@ def render_phase_two(store_sources: dict[str, object], filtered_games: pd.DataFr
     )
 
     render_signal_card(
-        "Fase 2: transformacao dos dados em informacao gerencial",
+        "Fase 2: transformacao dos dados em informacoes gerenciais",
         "Nesta fase, a analise deixa de apenas descrever a operacao e passa a combinar 10 sinais internos da SteamLoja com 4 sinais externos de plataforma e hardware para sustentar o medio e longo prazo.",
     )
     grouped_labels = ["14 informacoes estrategicas", "Operacao + plataforma + hardware", f"Fonte ativa: {source_mode}"]
@@ -797,7 +797,7 @@ def render_phase_two(store_sources: dict[str, object], filtered_games: pd.DataFr
 
     render_signal_card(
         "Apoio de monetizacao e pirataria",
-        "Os sinais abaixo nao entram nas 14 informacoes principais para evitar excesso de cards, mas ajudam a defender por que conveniencia, ecossistema e hardware oficial podem capturar mais valor do que depender apenas de DRM.",
+        "Os sinais abaixo nao entram nas 14 informacoes principais para evitar excesso de cards, mas ajudam a defender por que praticidade, ecossistema e hardware oficial podem capturar mais valor do que depender apenas de protecao tecnica.",
     )
     support_columns = st.columns(2)
     for column, item in zip(support_columns, store_sources["piracy_support"], strict=False):
@@ -987,7 +987,7 @@ def run_app() -> None:
     tabs = st.tabs(
         [
             "Fase 1: Coleta e Organizacao",
-            "Fase 2: Processamento e Insights",
+            "Fase 2: Processamento e Informacoes",
             "Fase 3: Planejamento Estrategico",
         ]
     )

@@ -41,11 +41,11 @@ def build_context_overview_cards(context: ContextSources) -> list[dict[str, str]
     windows = _metric_row(context.platform_shift, "Participacao do Windows na Steam")
     linux = _metric_row(context.platform_shift, "Participacao do Linux na Steam")
     steamos = _metric_row(context.platform_shift, "Participacao do SteamOS Holo entre usuarios Linux da Steam")
-    removable_apps = _metric_row(context.windows_friction, "Apps inbox configuraveis para remocao por politica no Windows 11 25H2")
+    removable_apps = _metric_row(context.windows_friction, "Aplicativos preinstalados configuraveis para remocao por politica no Windows 11 25H2")
     recall = _metric_row(context.windows_friction, "Recall em dispositivos gerenciados")
     consumer_dram = _metric_row(context.hardware_cost_pressure, "Consumer DRAM no 2Q26")
     nand = _metric_row(context.hardware_cost_pressure, "NAND Flash no 2Q26")
-    steam_hardware = _metric_row(context.hardware_cost_pressure, "Steam Deck refurbished e Steam Machine listados na loja oficial")
+    steam_hardware = _metric_row(context.hardware_cost_pressure, "Steam Deck recondicionado e Steam Machine listados na loja oficial")
     software_piracy = _metric_row(context.piracy_pressure, "Visitas globais a sites de pirataria de software")
     crack_first_week = _metric_row(context.piracy_pressure, "Perda media de receita com crack na primeira semana")
 
@@ -65,9 +65,9 @@ def build_context_overview_cards(context: ContextSources) -> list[dict[str, str]
             "title": "Fonte 5: atrito com Windows",
             "body": (
                 f"O Windows 11 25H2 ja permite remover {removable_apps['value']} por politica, "
-                f"e o Recall fica {recall['value'].lower()} em dispositivos gerenciados."
+                f"e a funcao Recall fica {recall['value'].lower()} em computadores gerenciados."
             ),
-            "decision": "A experiencia Windows virou tema de controle e simplificacao, abrindo espaco para uma plataforma focada em jogos.",
+            "decision": "A experiencia do Windows virou tema de controle e simplificacao, abrindo espaco para uma plataforma focada em jogos.",
             "source_name": "Microsoft Learn",
             "source_url": str(removable_apps["source_url"]),
             "period": "2026",
@@ -76,9 +76,9 @@ def build_context_overview_cards(context: ContextSources) -> list[dict[str, str]
             "title": "Fonte 6: custo de hardware",
             "body": (
                 f"TrendForce projeta consumer DRAM em {consumer_dram['value']} e NAND em {nand['value']}. "
-                f"Na loja oficial, o Steam Deck refurbished aparece com entrada em US$279 e a Steam Machine segue como coming soon."
+                f"Na loja oficial, o Steam Deck recondicionado aparece com entrada em US$279 e a Steam Machine segue como produto previsto para breve."
             ),
-            "decision": "Os sinais apontam para a necessidade de hardware proprio com politica comercial controlada e bundles mais inteligentes.",
+            "decision": "Os sinais apontam para a necessidade de hardware proprio com politica comercial controlada e combos mais inteligentes.",
             "source_name": "TrendForce + Steam Store",
             "source_url": str(steam_hardware["source_url"]),
             "period": "Mar/Abr 2026",
@@ -89,7 +89,7 @@ def build_context_overview_cards(context: ContextSources) -> list[dict[str, str]
                 f"A MUSO registrou {software_piracy['value']} visitas a pirataria de software em 2024, "
                 f"enquanto cracks na primeira semana podem custar {crack_first_week['value']} de receita."
             ),
-            "decision": "Isso reforca a importancia de capturar o usuario por conveniencia, biblioteca e hardware oficial, e nao apenas por DRM.",
+            "decision": "Isso reforca a importancia de conquistar o usuario por conveniencia, biblioteca e hardware oficial, e nao apenas por bloqueios contra copia.",
             "source_name": "MUSO + Entertainment Computing",
             "source_url": str(software_piracy["source_url"]),
             "period": "2024-2025",
@@ -101,10 +101,10 @@ def build_external_insights(context: ContextSources) -> list[dict[str, str]]:
     windows = _metric_row(context.platform_shift, "Participacao do Windows na Steam")
     linux = _metric_row(context.platform_shift, "Participacao do Linux na Steam")
     steamos = _metric_row(context.platform_shift, "Participacao do SteamOS Holo entre usuarios Linux da Steam")
-    removable_apps = _metric_row(context.windows_friction, "Apps inbox configuraveis para remocao por politica no Windows 11 25H2")
+    removable_apps = _metric_row(context.windows_friction, "Aplicativos preinstalados configuraveis para remocao por politica no Windows 11 25H2")
     conventional_dram = _metric_row(context.hardware_cost_pressure, "Conventional DRAM no 2Q26")
     nand = _metric_row(context.hardware_cost_pressure, "NAND Flash no 2Q26")
-    steam_hardware = _metric_row(context.hardware_cost_pressure, "Steam Deck refurbished e Steam Machine listados na loja oficial")
+    steam_hardware = _metric_row(context.hardware_cost_pressure, "Steam Deck recondicionado e Steam Machine listados na loja oficial")
 
     return [
         {
@@ -122,7 +122,7 @@ def build_external_insights(context: ContextSources) -> list[dict[str, str]]:
             "title": "SteamOS Holo ja lidera o recorte Linux da Steam",
             "value": str(steamos["value"]),
             "why": "SteamOS Holo aparece como a distribuicao mais representativa no recorte Linux, mostrando tracao do ambiente controlado da Valve.",
-            "action": "A SteamLoja pode defender colecoes e comunicacao SteamOS Ready com base em uma base instalada real.",
+            "action": "A SteamLoja pode defender colecoes e comunicacao para jogos prontos para SteamOS com base em uma base instalada real.",
             "source_name": str(steamos["source_name"]),
             "source_url": str(steamos["source_url"]),
             "period": str(steamos["period"]),
@@ -131,7 +131,7 @@ def build_external_insights(context: ContextSources) -> list[dict[str, str]]:
             "group": "Atrito com Windows",
             "title": "Windows 11 25H2 reconhece a necessidade de enxugar a experiencia padrao",
             "value": f"{removable_apps['value']} removiveis por politica",
-            "why": "A propria Microsoft criou uma politica especifica para remover apps inbox, o que mostra que simplificacao e controle viraram demanda concreta.",
+            "why": "A propria Microsoft criou uma politica especifica para remover aplicativos preinstalados, o que mostra que simplificacao e controle viraram demanda concreta.",
             "action": "Esse dado sustenta a narrativa de que SteamOS entrega uma experiencia mais focada em jogo e menos carregada de atritos.",
             "source_name": str(removable_apps["source_name"]),
             "source_url": str(removable_apps["source_url"]),
@@ -141,8 +141,8 @@ def build_external_insights(context: ContextSources) -> list[dict[str, str]]:
             "group": "Hardware e ecossistema",
             "title": "Memoria, storage e a vitrine oficial de hardware reforcam o valor de um ecossistema proprio e acessivel",
             "value": f"DRAM {conventional_dram['value']} | NAND {nand['value']}",
-            "why": "A pressao de custo em memoria e armazenamento convive com uma estrategia oficial de entrada acessivel via Steam Deck refurbished e com Steam Machine listada como proximo passo do portfolio.",
-            "action": "O plano de 1 ano deve priorizar bundle de hardware, financiamento leve e captura por ecossistema em vez de depender de aumento de taxa da loja.",
+            "why": "A pressao de custo em memoria e armazenamento convive com uma estrategia oficial de entrada acessivel via Steam Deck recondicionado e com Steam Machine listada como proximo passo da linha de produtos.",
+            "action": "O plano de 1 ano deve priorizar combo de hardware, financiamento leve e captura por ecossistema em vez de depender de aumento de taxa da loja.",
             "source_name": "TrendForce + Steam Store hardware catalog",
             "source_url": str(steam_hardware["source_url"]),
             "period": "Mar/Abr 2026",
@@ -161,7 +161,7 @@ def build_piracy_support(context: ContextSources) -> list[dict[str, str]]:
             "title": "Pirataria continua grande, mesmo em queda",
             "value": f"{software_piracy['value']} em software | {total_piracy['value']} no total",
             "why": "A demanda por acesso informal continua massiva em escala global, ainda que categorias maduras de acesso legal estejam reduzindo parte das visitas.",
-            "action": "A SteamLoja deve competir por conveniencia e acesso integrado ao ecossistema, nao so por repressao.",
+            "action": "A SteamLoja deve competir por conveniencia e acesso integrado ao ecossistema, nao so por bloqueio e punicao.",
             "source_name": str(software_piracy["source_name"]),
             "source_url": str(software_piracy["source_url"]),
             "period": str(software_piracy["period"]),
@@ -170,7 +170,7 @@ def build_piracy_support(context: ContextSources) -> list[dict[str, str]]:
             "title": "A janela inicial de monetizacao continua critica",
             "value": f"{crack_first_week['value']} na 1a semana | {crack_twelve_weeks['value']} apos 12 semanas",
             "why": "O impacto economico do crack e muito mais relevante no inicio do ciclo comercial do que no longo prazo.",
-            "action": "Capturar usuario por SteamOS, Steam Deck e Steam Machine faz mais sentido estrategico do que apostar apenas em DRM persistente.",
+            "action": "Conquistar o usuario por SteamOS, Steam Deck e Steam Machine faz mais sentido estrategico do que apostar apenas em protecao tecnica permanente.",
             "source_name": str(crack_first_week["source_name"]),
             "source_url": str(crack_first_week["source_url"]),
             "period": "Publicacao 2025",
