@@ -958,7 +958,7 @@ def render_export_controls(games_df: pd.DataFrame) -> None:
         return
 
     st.download_button(
-        "Baixar relatorio em PDF",
+        "Baixar apresentacao do trabalho em PDF",
         data=pdf_bytes,
         file_name="steamloja_academica.pdf",
         mime="application/pdf",
